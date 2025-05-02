@@ -1,5 +1,5 @@
-use std::fs::{metadata, File};
-use std::io::Read;
+use std::fs::{metadata, File, OpenOptions};
+use std::io::{Read, Write};
 use std::process::exit;
 
 use clap::{crate_authors, crate_version, App, Arg};
@@ -29,10 +29,12 @@ fn main() {
         )
         .get_matches();
 
-    let source = matches.value_of("INPUT").unwrap_or("./");
+    let source = matches
+        .value_of("INPUT")
+        .unwrap_or(".");
     match metadata(source) {
         Err(e) => {
-            println!("{}", e);
+            println!("Unable to find source.{}{}", source, e);
             exit(1)
         }
         Ok(md) => {
@@ -48,37 +50,55 @@ fn main() {
                             if is_rust_module(&entry) {
                                 let path =
                                     entry.path().to_str().expect("fail to access rust module");
-                                let mut ent = file_parser(parse_syntax(path));
-                                entities.append(&mut ent)
+                                match parse_syntax(path) {
+                                    Ok(syntax) => {
+                                        let mut ent = file_parser(syntax);
+                                        entities.append(&mut ent);
+                                    }
+                                    Err(e) => {
+                                        println!("Failed to parse syntax for {}: {}", path, e);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-                println!("{}", render_plantuml(entities));
+                let file_name = "plantuml.puml";
+                if File::open(file_name).is_ok() {
+                    std::fs::remove_file(file_name).expect("Unable to remove file");
+                }
+
+                let file = File::create(file_name);
+                let mut file = file.expect("Unable to create file");
+
+                // Write some text to the file
+                file.write_all(render_plantuml(entities).as_bytes())
+                    .expect("Unable to write to file");
+
+                // Flush the file to ensure all data is written
+                let _ = file.flush();
                 exit(0)
             }
-
-            let entities = file_parser(parse_syntax(source));
-            println!("{}", render_plantuml(entities))
         }
     }
-}
 
-fn parse_syntax(path: &str) -> syn::File {
-    let mut file = File::open(path).expect("Unable to open file");
-    let mut src = String::new();
-    file.read_to_string(&mut src).expect("Unable to read file");
-    syn::parse_file(&src).expect("Unable to parse file")
-}
+    fn parse_syntax(path: &str) -> Result<syn::File, Box<dyn std::error::Error>> {
+        let mut file = File::open(path)?;
+        let mut src = String::new();
+        file.read_to_string(&mut src)?;
+        let syntax = syn::parse_file(&src)?;
+        Ok(syntax)
+    }
 
-fn is_rust_module(entry: &DirEntry) -> bool {
-    let path: String = entry
-        .file_name()
-        .to_str()
-        .unwrap_or("")
-        .chars()
-        .rev()
-        .take(3)
-        .collect();
-    &path == "sr."
+    fn is_rust_module(entry: &DirEntry) -> bool {
+        let path: String = entry
+            .file_name()
+            .to_str()
+            .unwrap_or("")
+            .chars()
+            .rev()
+            .take(3)
+            .collect();
+        &path == "sr."
+    }
 }
