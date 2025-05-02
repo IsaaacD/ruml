@@ -17,3 +17,7 @@ Java - http://java.com/en/download/
 Graphviz - https://www.graphviz.org/download/
 
 *Note*: When viewing large PlantUML diagrams, it's recommended to export to SVG then view in a browser for better performance and CTRL-F functionality.
+
+Export by right-clicking xxxx.puml:
+
+![Export dialog](/READMEIMAGES/Export.png)
