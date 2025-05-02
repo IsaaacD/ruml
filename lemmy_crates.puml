@@ -1,0 +1,7406 @@
+@startuml
+
+class "Claims" {
+    + sub: String
+    + iss: String
+    + iat: i64
+}
+
+class "CreateComment" {
+    + content: String
+    + post_id: PostId
+    + parent_id: Option<CommentId>
+    + language_id: Option<LanguageId>
+}
+
+class "GetComment" {
+    + id: CommentId
+}
+
+class "EditComment" {
+    + comment_id: CommentId
+    + content: Option<String>
+    + language_id: Option<LanguageId>
+}
+
+class "DistinguishComment" {
+    + comment_id: CommentId
+    + distinguished: bool
+}
+
+class "DeleteComment" {
+    + comment_id: CommentId
+    + deleted: bool
+}
+
+class "RemoveComment" {
+    + comment_id: CommentId
+    + removed: bool
+    + reason: Option<String>
+}
+
+class "SaveComment" {
+    + comment_id: CommentId
+    + save: bool
+}
+
+class "CommentResponse" {
+    + comment_view: CommentView
+    + recipient_ids: Vec<LocalUserId>
+}
+
+class "CreateCommentLike" {
+    + comment_id: CommentId
+    + score: i16
+}
+
+class "GetComments" {
+    + type_: Option<ListingType>
+    + sort: Option<CommentSortType>
+    + time_range_seconds: Option<i32>
+    + max_depth: Option<i32>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+    + community_id: Option<CommunityId>
+    + community_name: Option<String>
+    + post_id: Option<PostId>
+    + parent_id: Option<CommentId>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+}
+
+class "GetCommentsResponse" {
+    + comments: Vec<CommentView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "GetCommentsSlimResponse" {
+    + comments: Vec<CommentSlimView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListCommentLikes" {
+    + comment_id: CommentId
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListCommentLikesResponse" {
+    + comment_likes: Vec<VoteView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "CreateCommunityTag" {
+    + community_id: CommunityId
+    + display_name: String
+}
+
+class "UpdateCommunityTag" {
+    + tag_id: TagId
+    + display_name: String
+}
+
+class "DeleteCommunityTag" {
+    + tag_id: TagId
+}
+
+class "GetCommunity" {
+    + id: Option<CommunityId>
+    + name: Option<String>
+}
+
+class "GetCommunityResponse" {
+    + community_view: CommunityView
+    + site: Option<Site>
+    + moderators: Vec<CommunityModeratorView>
+    + discussion_languages: Vec<LanguageId>
+}
+
+class "CreateCommunity" {
+    + name: String
+    + title: String
+    + sidebar: Option<String>
+    + description: Option<String>
+    + icon: Option<String>
+    + banner: Option<String>
+    + nsfw: Option<bool>
+    + posting_restricted_to_mods: Option<bool>
+    + discussion_languages: Option<Vec<LanguageId>>
+    + visibility: Option<CommunityVisibility>
+}
+
+class "CommunityResponse" {
+    + community_view: CommunityView
+    + discussion_languages: Vec<LanguageId>
+}
+
+class "ListCommunities" {
+    + type_: Option<ListingType>
+    + sort: Option<CommunitySortType>
+    + time_range_seconds: Option<i32>
+    + show_nsfw: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListCommunitiesResponse" {
+    + communities: Vec<CommunityView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "BanFromCommunity" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + ban: bool
+    + remove_or_restore_data: Option<bool>
+    + reason: Option<String>
+    + expires: Option<i64>
+}
+
+class "BanFromCommunityResponse" {
+    + person_view: PersonView
+    + banned: bool
+}
+
+class "AddModToCommunity" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + added: bool
+}
+
+class "AddModToCommunityResponse" {
+    + moderators: Vec<CommunityModeratorView>
+}
+
+class "EditCommunity" {
+    + community_id: CommunityId
+    + title: Option<String>
+    + sidebar: Option<String>
+    + description: Option<String>
+    + nsfw: Option<bool>
+    + posting_restricted_to_mods: Option<bool>
+    + discussion_languages: Option<Vec<LanguageId>>
+    + visibility: Option<CommunityVisibility>
+}
+
+class "HideCommunity" {
+    + community_id: CommunityId
+    + hidden: bool
+    + reason: Option<String>
+}
+
+class "DeleteCommunity" {
+    + community_id: CommunityId
+    + deleted: bool
+}
+
+class "RemoveCommunity" {
+    + community_id: CommunityId
+    + removed: bool
+    + reason: Option<String>
+}
+
+class "FollowCommunity" {
+    + community_id: CommunityId
+    + follow: bool
+}
+
+class "BlockCommunity" {
+    + community_id: CommunityId
+    + block: bool
+}
+
+class "BlockCommunityResponse" {
+    + community_view: CommunityView
+    + blocked: bool
+}
+
+class "TransferCommunity" {
+    + community_id: CommunityId
+    + person_id: PersonId
+}
+
+class "GetRandomCommunity" {
+    + type_: Option<ListingType>
+    + show_nsfw: Option<bool>
+}
+
+class "ListCommunityPendingFollows" {
+    + pending_only: Option<bool>
+    + all_communities: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "GetCommunityPendingFollowsCount" {
+    + community_id: CommunityId
+}
+
+class "GetCommunityPendingFollowsCountResponse" {
+    + count: i64
+}
+
+class "ListCommunityPendingFollowsResponse" {
+    + items: Vec<PendingFollow>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ApproveCommunityPendingFollower" {
+    + community_id: CommunityId
+    + follower_id: PersonId
+    + approve: bool
+}
+
+class "LemmyContext" {
+    + pool: ActualDbPool
+    + client: Arc<ClientWithMiddleware>
+    + pictrs_client: Arc<ClientWithMiddleware>
+    + secret: Arc<Secret>
+    + rate_limit_cell: RateLimitCell
+}
+
+class "CreateCustomEmoji" {
+    + category: String
+    + shortcode: String
+    + image_url: Url
+    + alt_text: String
+    + keywords: Vec<String>
+}
+
+class "EditCustomEmoji" {
+    + id: CustomEmojiId
+    + category: String
+    + image_url: Url
+    + alt_text: String
+    + keywords: Vec<String>
+}
+
+class "DeleteCustomEmoji" {
+    + id: CustomEmojiId
+}
+
+class "CustomEmojiResponse" {
+    + custom_emoji: CustomEmojiView
+}
+
+class "ListCustomEmojisResponse" {
+    + custom_emojis: Vec<CustomEmojiView>
+}
+
+class "ListCustomEmojis" {
+    + category: Option<String>
+}
+
+class "ImageGetParams" {
+    + file_type: Option<String>
+    + max_size: Option<i32>
+}
+
+class "DeleteImageParams" {
+    + filename: String
+}
+
+class "ImageProxyParams" {
+    + url: String
+    + file_type: Option<String>
+    + max_size: Option<i32>
+}
+
+class "UploadImageResponse" {
+    + image_url: Url
+    + filename: String
+}
+
+class "CommunityIdQuery" {
+    + id: CommunityId
+}
+
+class "SuccessResponse" {
+    + success: bool
+}
+
+class "CreateOAuthProvider" {
+    + display_name: String
+    + issuer: String
+    + authorization_endpoint: String
+    + token_endpoint: String
+    + userinfo_endpoint: String
+    + id_claim: String
+    + client_id: String
+    + client_secret: String
+    + scopes: String
+    + auto_verify_email: Option<bool>
+    + account_linking_enabled: Option<bool>
+    + use_pkce: Option<bool>
+    + enabled: Option<bool>
+}
+
+class "EditOAuthProvider" {
+    + id: OAuthProviderId
+    + display_name: Option<String>
+    + authorization_endpoint: Option<String>
+    + token_endpoint: Option<String>
+    + userinfo_endpoint: Option<String>
+    + id_claim: Option<String>
+    + client_secret: Option<String>
+    + scopes: Option<String>
+    + auto_verify_email: Option<bool>
+    + account_linking_enabled: Option<bool>
+    + use_pkce: Option<bool>
+    + enabled: Option<bool>
+}
+
+class "DeleteOAuthProvider" {
+    + id: OAuthProviderId
+}
+
+class "AuthenticateWithOauth" {
+    + code: String
+    + oauth_provider_id: OAuthProviderId
+    + redirect_uri: Url
+    + show_nsfw: Option<bool>
+    + username: Option<String>
+    + answer: Option<String>
+    + pkce_code_verifier: Option<String>
+}
+
+class "Login" {
+    + username_or_email: SensitiveString
+    + password: SensitiveString
+    + totp_2fa_token: Option<String>
+}
+
+class "Register" {
+    + username: String
+    + password: SensitiveString
+    + password_verify: SensitiveString
+    + show_nsfw: Option<bool>
+    + email: Option<SensitiveString>
+    + captcha_uuid: Option<String>
+    + captcha_answer: Option<String>
+    + honeypot: Option<String>
+    + answer: Option<String>
+}
+
+class "GetCaptchaResponse" {
+    + ok: Option<CaptchaResponse>
+}
+
+class "CaptchaResponse" {
+    + png: String
+    + wav: String
+    + uuid: String
+}
+
+class "SaveUserSettings" {
+    + show_nsfw: Option<bool>
+    + blur_nsfw: Option<bool>
+    + theme: Option<String>
+    + default_listing_type: Option<ListingType>
+    + post_listing_mode: Option<PostListingMode>
+    + default_post_sort_type: Option<PostSortType>
+    + default_post_time_range_seconds: Option<i32>
+    + default_comment_sort_type: Option<CommentSortType>
+    + interface_language: Option<String>
+    + display_name: Option<String>
+    + email: Option<SensitiveString>
+    + bio: Option<String>
+    + matrix_user_id: Option<String>
+    + show_avatars: Option<bool>
+    + send_notifications_to_email: Option<bool>
+    + bot_account: Option<bool>
+    + show_bot_accounts: Option<bool>
+    + show_read_posts: Option<bool>
+    + discussion_languages: Option<Vec<LanguageId>>
+    + blocking_keywords: Option<Vec<String>>
+    + open_links_in_new_tab: Option<bool>
+    + infinite_scroll_enabled: Option<bool>
+    + enable_keyboard_navigation: Option<bool>
+    + enable_animated_images: Option<bool>
+    + enable_private_messages: Option<bool>
+    + collapse_bot_comments: Option<bool>
+    + show_scores: Option<bool>
+    + show_upvotes: Option<bool>
+    + show_downvotes: Option<bool>
+    + show_upvote_percentage: Option<bool>
+    + auto_mark_fetched_posts_as_read: Option<bool>
+    + hide_media: Option<bool>
+}
+
+class "ChangePassword" {
+    + new_password: SensitiveString
+    + new_password_verify: SensitiveString
+    + old_password: SensitiveString
+}
+
+class "LoginResponse" {
+    + jwt: Option<SensitiveString>
+    + registration_created: bool
+    + verify_email_sent: bool
+}
+
+class "GetPersonDetails" {
+    + person_id: Option<PersonId>
+    + username: Option<String>
+}
+
+class "GetPersonDetailsResponse" {
+    + person_view: PersonView
+    + site: Option<Site>
+    + moderates: Vec<CommunityModeratorView>
+}
+
+class "ListPersonContent" {
+    + type_: Option<PersonContentType>
+    + person_id: Option<PersonId>
+    + username: Option<String>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListPersonContentResponse" {
+    + content: Vec<PersonContentCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListPersonSaved" {
+    + type_: Option<PersonContentType>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListPersonSavedResponse" {
+    + saved: Vec<PersonSavedCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListPersonRead" {
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListPersonReadResponse" {
+    + read: Vec<PostView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListPersonHidden" {
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListPersonHiddenResponse" {
+    + hidden: Vec<PostView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "AddAdmin" {
+    + person_id: PersonId
+    + added: bool
+}
+
+class "AddAdminResponse" {
+    + admins: Vec<PersonView>
+}
+
+class "BanPerson" {
+    + person_id: PersonId
+    + ban: bool
+    + remove_or_restore_data: Option<bool>
+    + reason: Option<String>
+    + expires: Option<i64>
+}
+
+class "ListBannedPersons" {
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "BannedPersonsResponse" {
+    + banned: Vec<PersonView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "BanPersonResponse" {
+    + person_view: PersonView
+    + banned: bool
+}
+
+class "BlockPerson" {
+    + person_id: PersonId
+    + block: bool
+}
+
+class "BlockPersonResponse" {
+    + person_view: PersonView
+    + blocked: bool
+}
+
+class "ListInbox" {
+    + type_: Option<InboxDataType>
+    + unread_only: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListInboxResponse" {
+    + inbox: Vec<InboxCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "MarkPersonCommentMentionAsRead" {
+    + person_comment_mention_id: PersonCommentMentionId
+    + read: bool
+}
+
+class "MarkPersonPostMentionAsRead" {
+    + person_post_mention_id: PersonPostMentionId
+    + read: bool
+}
+
+class "MarkCommentReplyAsRead" {
+    + comment_reply_id: CommentReplyId
+    + read: bool
+}
+
+class "DeleteAccount" {
+    + password: SensitiveString
+    + delete_content: bool
+}
+
+class "PasswordReset" {
+    + email: SensitiveString
+}
+
+class "PasswordChangeAfterReset" {
+    + token: SensitiveString
+    + password: SensitiveString
+    + password_verify: SensitiveString
+}
+
+class "GetReportCount" {
+    + community_id: Option<CommunityId>
+}
+
+class "GetReportCountResponse" {
+    + count: i64
+}
+
+class "GetUnreadCountResponse" {
+    + count: i64
+}
+
+class "VerifyEmail" {
+    + token: String
+}
+
+class "GenerateTotpSecretResponse" {
+    + totp_secret_url: SensitiveString
+}
+
+class "UpdateTotp" {
+    + totp_token: String
+    + enabled: bool
+}
+
+class "UpdateTotpResponse" {
+    + enabled: bool
+}
+
+class "ListMedia" {
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListMediaResponse" {
+    + images: Vec<LocalImageView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListLoginsResponse" {
+    + logins: Vec<LoginToken>
+}
+
+class "ResendVerificationEmail" {
+    + email: SensitiveString
+}
+
+class "LemmyPlugins" {
+}
+
+class "LemmyPlugin" {
+    + plugin_pool: Pool<()>
+    + metadata: PluginMetadata
+}
+
+class "CreatePost" {
+    + name: String
+    + community_id: CommunityId
+    + url: Option<String>
+    + body: Option<String>
+    + alt_text: Option<String>
+    + honeypot: Option<String>
+    + nsfw: Option<bool>
+    + language_id: Option<LanguageId>
+    + custom_thumbnail: Option<String>
+    + tags: Option<Vec<TagId>>
+    + scheduled_publish_time: Option<i64>
+}
+
+class "PostResponse" {
+    + post_view: PostView
+}
+
+class "GetPost" {
+    + id: Option<PostId>
+    + comment_id: Option<CommentId>
+}
+
+class "GetPostResponse" {
+    + post_view: PostView
+    + community_view: CommunityView
+    + cross_posts: Vec<PostView>
+}
+
+class "GetPosts" {
+    + type_: Option<ListingType>
+    + sort: Option<PostSortType>
+    + time_range_seconds: Option<i32>
+    + community_id: Option<CommunityId>
+    + community_name: Option<String>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+    + show_hidden: Option<bool>
+    + show_read: Option<bool>
+    + show_nsfw: Option<bool>
+    + hide_media: Option<bool>
+    + mark_as_read: Option<bool>
+    + no_comments_only: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "GetPostsResponse" {
+    + posts: Vec<PostView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "CreatePostLike" {
+    + post_id: PostId
+    + score: i16
+}
+
+class "EditPost" {
+    + post_id: PostId
+    + name: Option<String>
+    + url: Option<String>
+    + body: Option<String>
+    + alt_text: Option<String>
+    + nsfw: Option<bool>
+    + language_id: Option<LanguageId>
+    + custom_thumbnail: Option<String>
+    + scheduled_publish_time: Option<i64>
+    + tags: Option<Vec<TagId>>
+}
+
+class "DeletePost" {
+    + post_id: PostId
+    + deleted: bool
+}
+
+class "RemovePost" {
+    + post_id: PostId
+    + removed: bool
+    + reason: Option<String>
+}
+
+class "MarkPostAsRead" {
+    + post_id: PostId
+    + read: bool
+}
+
+class "MarkManyPostsAsRead" {
+    + post_ids: Vec<PostId>
+}
+
+class "HidePost" {
+    + post_id: PostId
+    + hide: bool
+}
+
+class "LockPost" {
+    + post_id: PostId
+    + locked: bool
+}
+
+class "FeaturePost" {
+    + post_id: PostId
+    + featured: bool
+    + feature_type: PostFeatureType
+}
+
+class "SavePost" {
+    + post_id: PostId
+    + save: bool
+}
+
+class "GetSiteMetadata" {
+    + url: String
+}
+
+class "GetSiteMetadataResponse" {
+    + metadata: LinkMetadata
+}
+
+class "LinkMetadata" {
+    + opengraph_data: OpenGraphData
+    + content_type: Option<String>
+}
+
+class "OpenGraphData" {
+    + title: Option<String>
+    + description: Option<String>
+    + image: Option<DbUrl>
+    + embed_video_url: Option<DbUrl>
+}
+
+class "ListPostLikes" {
+    + post_id: PostId
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListPostLikesResponse" {
+    + post_likes: Vec<VoteView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "CreatePrivateMessage" {
+    + content: String
+    + recipient_id: PersonId
+}
+
+class "EditPrivateMessage" {
+    + private_message_id: PrivateMessageId
+    + content: String
+}
+
+class "DeletePrivateMessage" {
+    + private_message_id: PrivateMessageId
+    + deleted: bool
+}
+
+class "MarkPrivateMessageAsRead" {
+    + private_message_id: PrivateMessageId
+    + read: bool
+}
+
+class "PrivateMessageResponse" {
+    + private_message_view: PrivateMessageView
+}
+
+class "ListReports" {
+    + unresolved_only: Option<bool>
+    + type_: Option<ReportType>
+    + post_id: Option<PostId>
+    + community_id: Option<CommunityId>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+    + show_community_rule_violations: Option<bool>
+    + my_reports_only: Option<bool>
+}
+
+class "ListReportsResponse" {
+    + reports: Vec<ReportCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "CreateCommentReport" {
+    + comment_id: CommentId
+    + reason: String
+    + violates_instance_rules: Option<bool>
+}
+
+class "CommentReportResponse" {
+    + comment_report_view: CommentReportView
+}
+
+class "ResolveCommentReport" {
+    + report_id: CommentReportId
+    + resolved: bool
+}
+
+class "CreateCommunityReport" {
+    + community_id: CommunityId
+    + reason: String
+}
+
+class "CommunityReportResponse" {
+    + community_report_view: CommunityReportView
+}
+
+class "ResolveCommunityReport" {
+    + report_id: CommunityReportId
+    + resolved: bool
+}
+
+class "CreatePostReport" {
+    + post_id: PostId
+    + reason: String
+    + violates_instance_rules: Option<bool>
+}
+
+class "PostReportResponse" {
+    + post_report_view: PostReportView
+}
+
+class "ResolvePostReport" {
+    + report_id: PostReportId
+    + resolved: bool
+}
+
+class "CreatePrivateMessageReport" {
+    + private_message_id: PrivateMessageId
+    + reason: String
+}
+
+class "PrivateMessageReportResponse" {
+    + private_message_report_view: PrivateMessageReportView
+}
+
+class "ResolvePrivateMessageReport" {
+    + report_id: PrivateMessageReportId
+    + resolved: bool
+}
+
+class "PictrsResponse" {
+    + files: Vec<PictrsFile>
+    + msg: String
+}
+
+class "PictrsFile" {
+    + file: String
+    + details: PictrsFileDetails
+}
+
+class "PictrsFileDetails" {
+    + width: u16
+    + height: u16
+    + content_type: String
+    + created_at: DateTime<Utc>
+    + blurhash: Option<String>
+}
+
+class "PictrsPurgeResponse" {
+    + msg: String
+    + aliases: Vec<String>
+}
+
+class "ActivityChannel" {
+    + weak_sender: WeakUnboundedSender<SendActivityData>
+    + receiver: Mutex<UnboundedReceiver<SendActivityData>>
+    + keepalive_sender: Mutex<Option<UnboundedSender<SendActivityData>>>
+}
+
+class "Search" {
+    + search_term: Option<String>
+    + community_id: Option<CommunityId>
+    + community_name: Option<String>
+    + creator_id: Option<PersonId>
+    + type_: Option<SearchType>
+    + sort: Option<SearchSortType>
+    + time_range_seconds: Option<i32>
+    + listing_type: Option<ListingType>
+    + title_only: Option<bool>
+    + post_url_only: Option<bool>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "SearchResponse" {
+    + results: Vec<SearchCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ResolveObject" {
+    + q: String
+}
+
+class "ResolveObjectResponse" {
+    + comment: Option<CommentView>
+    + post: Option<PostView>
+    + community: Option<CommunityView>
+    + person: Option<PersonView>
+}
+
+class "GetModlog" {
+    + mod_person_id: Option<PersonId>
+    + community_id: Option<CommunityId>
+    + type_: Option<ModlogActionType>
+    + listing_type: Option<ListingType>
+    + other_person_id: Option<PersonId>
+    + post_id: Option<PostId>
+    + comment_id: Option<CommentId>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "CreateSite" {
+    + name: String
+    + sidebar: Option<String>
+    + description: Option<String>
+    + community_creation_admin_only: Option<bool>
+    + require_email_verification: Option<bool>
+    + application_question: Option<String>
+    + private_instance: Option<bool>
+    + default_theme: Option<String>
+    + default_post_listing_type: Option<ListingType>
+    + default_post_listing_mode: Option<PostListingMode>
+    + default_post_sort_type: Option<PostSortType>
+    + default_post_time_range_seconds: Option<i32>
+    + default_comment_sort_type: Option<CommentSortType>
+    + legal_information: Option<String>
+    + application_email_admins: Option<bool>
+    + hide_modlog_mod_names: Option<bool>
+    + discussion_languages: Option<Vec<LanguageId>>
+    + slur_filter_regex: Option<String>
+    + actor_name_max_length: Option<i32>
+    + rate_limit_message: Option<i32>
+    + rate_limit_message_per_second: Option<i32>
+    + rate_limit_post: Option<i32>
+    + rate_limit_post_per_second: Option<i32>
+    + rate_limit_register: Option<i32>
+    + rate_limit_register_per_second: Option<i32>
+    + rate_limit_image: Option<i32>
+    + rate_limit_image_per_second: Option<i32>
+    + rate_limit_comment: Option<i32>
+    + rate_limit_comment_per_second: Option<i32>
+    + rate_limit_search: Option<i32>
+    + rate_limit_search_per_second: Option<i32>
+    + federation_enabled: Option<bool>
+    + captcha_enabled: Option<bool>
+    + captcha_difficulty: Option<String>
+    + registration_mode: Option<RegistrationMode>
+    + oauth_registration: Option<bool>
+    + content_warning: Option<String>
+    + post_upvotes: Option<FederationMode>
+    + post_downvotes: Option<FederationMode>
+    + comment_upvotes: Option<FederationMode>
+    + comment_downvotes: Option<FederationMode>
+    + disallow_nsfw_content: Option<bool>
+    + disable_email_notifications: Option<bool>
+}
+
+class "EditSite" {
+    + name: Option<String>
+    + sidebar: Option<String>
+    + description: Option<String>
+    + community_creation_admin_only: Option<bool>
+    + require_email_verification: Option<bool>
+    + application_question: Option<String>
+    + private_instance: Option<bool>
+    + default_theme: Option<String>
+    + default_post_listing_type: Option<ListingType>
+    + default_post_listing_mode: Option<PostListingMode>
+    + default_post_sort_type: Option<PostSortType>
+    + default_post_time_range_seconds: Option<i32>
+    + default_comment_sort_type: Option<CommentSortType>
+    + legal_information: Option<String>
+    + application_email_admins: Option<bool>
+    + hide_modlog_mod_names: Option<bool>
+    + discussion_languages: Option<Vec<LanguageId>>
+    + slur_filter_regex: Option<String>
+    + actor_name_max_length: Option<i32>
+    + rate_limit_message: Option<i32>
+    + rate_limit_message_per_second: Option<i32>
+    + rate_limit_post: Option<i32>
+    + rate_limit_post_per_second: Option<i32>
+    + rate_limit_register: Option<i32>
+    + rate_limit_register_per_second: Option<i32>
+    + rate_limit_image: Option<i32>
+    + rate_limit_image_per_second: Option<i32>
+    + rate_limit_comment: Option<i32>
+    + rate_limit_comment_per_second: Option<i32>
+    + rate_limit_search: Option<i32>
+    + rate_limit_search_per_second: Option<i32>
+    + federation_enabled: Option<bool>
+    + captcha_enabled: Option<bool>
+    + captcha_difficulty: Option<String>
+    + blocked_urls: Option<Vec<String>>
+    + registration_mode: Option<RegistrationMode>
+    + reports_email_admins: Option<bool>
+    + content_warning: Option<String>
+    + oauth_registration: Option<bool>
+    + post_upvotes: Option<FederationMode>
+    + post_downvotes: Option<FederationMode>
+    + comment_upvotes: Option<FederationMode>
+    + comment_downvotes: Option<FederationMode>
+    + disallow_nsfw_content: Option<bool>
+    + disable_email_notifications: Option<bool>
+}
+
+class "SiteResponse" {
+    + site_view: SiteView
+    + taglines: Vec<()>
+}
+
+class "GetSiteResponse" {
+    + site_view: SiteView
+    + admins: Vec<PersonView>
+    + version: String
+    + my_user: Option<MyUserInfo>
+    + all_languages: Vec<Language>
+    + discussion_languages: Vec<LanguageId>
+    + tagline: Option<Tagline>
+    + oauth_providers: Vec<PublicOAuthProvider>
+    + admin_oauth_providers: Vec<OAuthProvider>
+    + blocked_urls: Vec<LocalSiteUrlBlocklist>
+    + image_upload_disabled: bool
+    + active_plugins: Vec<PluginMetadata>
+}
+
+class "GetFederatedInstancesResponse" {
+    + federated_instances: Option<FederatedInstances>
+}
+
+class "MyUserInfo" {
+    + local_user_view: LocalUserView
+    + follows: Vec<CommunityFollowerView>
+    + moderates: Vec<CommunityModeratorView>
+    + community_blocks: Vec<Community>
+    + instance_blocks: Vec<Instance>
+    + person_blocks: Vec<Person>
+    + keyword_blocks: Vec<String>
+    + discussion_languages: Vec<LanguageId>
+}
+
+class "FederatedInstances" {
+    + linked: Vec<InstanceWithFederationState>
+    + allowed: Vec<InstanceWithFederationState>
+    + blocked: Vec<InstanceWithFederationState>
+}
+
+class "ReadableFederationState" {
+    + internal_state: FederationQueueState
+    + next_retry: Option<DateTime<Utc>>
+}
+
+class "InstanceWithFederationState" {
+    + instance: Instance
+    + federation_state: Option<ReadableFederationState>
+}
+
+class "PurgePerson" {
+    + person_id: PersonId
+    + reason: Option<String>
+}
+
+class "PurgeCommunity" {
+    + community_id: CommunityId
+    + reason: Option<String>
+}
+
+class "PurgePost" {
+    + post_id: PostId
+    + reason: Option<String>
+}
+
+class "PurgeComment" {
+    + comment_id: CommentId
+    + reason: Option<String>
+}
+
+class "ListRegistrationApplications" {
+    + unread_only: Option<bool>
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ListRegistrationApplicationsResponse" {
+    + registration_applications: Vec<RegistrationApplicationView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "GetRegistrationApplication" {
+    + person_id: PersonId
+}
+
+class "ApproveRegistrationApplication" {
+    + id: RegistrationApplicationId
+    + approve: bool
+    + deny_reason: Option<String>
+}
+
+class "RegistrationApplicationResponse" {
+    + registration_application: RegistrationApplicationView
+}
+
+class "GetUnreadRegistrationApplicationCountResponse" {
+    + registration_applications: i64
+}
+
+class "UserBlockInstanceParams" {
+    + instance_id: InstanceId
+    + block: bool
+}
+
+class "AdminBlockInstanceParams" {
+    + instance: String
+    + block: bool
+    + reason: Option<String>
+    + expires: Option<DateTime<Utc>>
+}
+
+class "AdminAllowInstanceParams" {
+    + instance: String
+    + allow: bool
+    + reason: Option<String>
+}
+
+class "PluginMetadata" {
+    + name: String
+    + url: Url
+    + description: String
+}
+
+class "CreateTagline" {
+    + content: String
+}
+
+class "UpdateTagline" {
+    + id: TaglineId
+    + content: String
+}
+
+class "DeleteTagline" {
+    + id: TaglineId
+}
+
+class "TaglineResponse" {
+    + tagline: Tagline
+}
+
+class "ListTaglinesResponse" {
+    + taglines: Vec<Tagline>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "ListTaglines" {
+    + page_cursor: Option<PaginationCursor>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "TokenResponse" {
+    + access_token: String
+    + token_type: String
+    + expires_in: Option<i64>
+    + refresh_token: Option<String>
+    + scope: Option<String>
+}
+
+class "CommentsCommonOutput" {
+    + comments: Vec<CommentView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "UserSettingsBackup" {
+    + display_name: Option<String>
+    + bio: Option<String>
+    + avatar: Option<DbUrl>
+    + banner: Option<DbUrl>
+    + matrix_id: Option<String>
+    + bot_account: Option<bool>
+    + settings: Option<LocalUser>
+    + followed_communities: Vec<ObjectId<ApubCommunity>>
+    + saved_posts: Vec<ObjectId<ApubPost>>
+    + saved_comments: Vec<ObjectId<ApubComment>>
+    + blocked_communities: Vec<ObjectId<ApubCommunity>>
+    + blocked_users: Vec<ObjectId<ApubPerson>>
+    + blocked_instances: Vec<String>
+}
+
+class "ApubCommunityFeatured" {
+}
+
+class "ApubCommunityFollower" {
+}
+
+class "ApubCommunityModerators" {
+}
+
+class "ApubCommunityOutbox" {
+}
+
+class "CommentQuery" {
+    + comment_id: String
+}
+
+class "CommunityPath" {
+    + community_name: String
+}
+
+class "CommunityIsFollowerQuery" {
+    + is_follower: Option<ObjectId<SiteOrCommunityOrUser>>
+}
+
+class "ActivityQuery" {
+    + type_: String
+    + id: String
+}
+
+class "PersonQuery" {
+    + user_name: String
+}
+
+class "PostQuery" {
+    + post_id: String
+}
+
+class "InboxRequestGuard" {
+}
+
+class "VerifyUrlData" {
+}
+
+class "LocalSiteData" {
+    + local_site: Option<LocalSite>
+    + allowed_instances: Vec<Instance>
+    + blocked_instances: Vec<Instance>
+}
+
+class "Mention" {
+    + href: Url
+    + name: Option<String>
+    + kind: MentionType
+}
+
+class "MentionsAndAddresses" {
+    + ccs: Vec<Url>
+    + tags: Vec<MentionOrValue>
+}
+
+class "ApubComment" {
+}
+
+class "ApubCommunity" {
+}
+
+class "ApubSite" {
+}
+
+class "ApubPerson" {
+}
+
+class "ApubPost" {
+}
+
+class "ApubPrivateMessage" {
+}
+
+class "BlockUser" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: ObjectId<ApubPerson>
+    + cc: Vec<Url>
+    + target: ObjectId<SiteOrCommunity>
+    + kind: BlockType
+    + id: Url
+    + remove_data: Option<bool>
+    + summary: Option<String>
+    + end_time: Option<DateTime<Utc>>
+}
+
+class "UndoBlockUser" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: BlockUser
+    + cc: Vec<Url>
+    + kind: UndoType
+    + id: Url
+    + restore_data: Option<bool>
+}
+
+class "AnnounceActivity" {
+    + actor: ObjectId<ApubCommunity>
+    + to: Vec<Url>
+    + object: IdOrNestedObject<RawAnnouncableActivities>
+    + cc: Vec<Url>
+    + kind: AnnounceType
+    + id: Url
+}
+
+class "RawAnnouncableActivities" {
+    + id: Url
+    + actor: Url
+    + other: Map<String,Value>
+}
+
+class "CollectionAdd" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Url
+    + target: Url
+    + cc: Vec<Url>
+    + kind: AddType
+    + id: Url
+}
+
+class "CollectionRemove" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Url
+    + cc: Vec<Url>
+    + kind: RemoveType
+    + target: Url
+    + id: Url
+}
+
+class "LockPage" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: ObjectId<ApubPost>
+    + cc: Vec<Url>
+    + kind: LockType
+    + id: Url
+}
+
+class "UndoLockPage" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: LockPage
+    + cc: Vec<Url>
+    + kind: UndoType
+    + id: Url
+}
+
+class "Report" {
+    + actor: ObjectId<ApubPerson>
+    + to: [ObjectId<ApubCommunity>;1]
+    + object: ReportObject
+    + summary: Option<String>
+    + content: Option<String>
+    + kind: FlagType
+    + id: Url
+}
+
+class "ResolveReport" {
+    + actor: ObjectId<ApubPerson>
+    + to: [ObjectId<ApubCommunity>;1]
+    + object: Report
+    + kind: ResolveType
+    + id: Url
+}
+
+class "UpdateCommunity" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Box<Group>
+    + cc: Vec<Url>
+    + kind: UpdateType
+    + id: Url
+}
+
+class "CreateOrUpdateNote" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Note
+    + cc: Vec<Url>
+    + tag: Vec<MentionOrValue>
+    + kind: CreateOrUpdateType
+    + id: Url
+}
+
+class "CreateOrUpdateNoteWrapper" {
+    + object: NoteWrapper
+    + id: Url
+    + to: Vec<Url>
+    + cc: Vec<Url>
+    + actor: Url
+    + other: Map<String,Value>
+}
+
+class "NoteWrapper" {
+    + r#type: NoteType
+    + other: Map<String,Value>
+}
+
+class "CreateOrUpdatePage" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Page
+    + cc: Vec<Url>
+    + kind: CreateOrUpdateType
+    + id: Url
+}
+
+class "CreateOrUpdatePrivateMessage" {
+    + id: Url
+    + actor: ObjectId<ApubPerson>
+    + to: [ObjectId<ApubPerson>;1]
+    + object: PrivateMessage
+    + kind: CreateOrUpdateType
+}
+
+class "Delete" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: IdOrNestedObject<Tombstone>
+    + kind: DeleteType
+    + id: Url
+    + cc: Vec<Url>
+    + summary: Option<String>
+    + remove_data: Option<bool>
+}
+
+class "DeleteUser" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: ObjectId<ApubPerson>
+    + kind: DeleteType
+    + id: Url
+    + cc: Vec<Url>
+    + remove_data: Option<bool>
+}
+
+class "UndoDelete" {
+    + actor: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + object: Delete
+    + kind: UndoType
+    + id: Url
+    + cc: Vec<Url>
+}
+
+class "AcceptFollow" {
+    + actor: ObjectId<ApubCommunity>
+    + to: Option<[ObjectId<ApubPerson>;1]>
+    + object: Follow
+    + kind: AcceptType
+    + id: Url
+}
+
+class "Follow" {
+    + actor: ObjectId<ApubPerson>
+    + to: Option<[ObjectId<UserOrCommunity>;1]>
+    + object: ObjectId<UserOrCommunity>
+    + kind: FollowType
+    + id: Url
+}
+
+class "RejectFollow" {
+    + actor: ObjectId<ApubCommunity>
+    + to: Option<[ObjectId<ApubPerson>;1]>
+    + object: Follow
+    + kind: RejectType
+    + id: Url
+}
+
+class "UndoFollow" {
+    + actor: ObjectId<ApubPerson>
+    + to: Option<[ObjectId<ApubPerson>;1]>
+    + object: Follow
+    + kind: UndoType
+    + id: Url
+}
+
+class "UndoVote" {
+    + actor: ObjectId<ApubPerson>
+    + object: Vote
+    + kind: UndoType
+    + id: Url
+}
+
+class "Vote" {
+    + actor: ObjectId<ApubPerson>
+    + object: ObjectId<PostOrComment>
+    + kind: VoteType
+    + id: Url
+}
+
+class "EmptyOutbox" {
+    + r#type: OrderedCollectionType
+    + id: Url
+    + ordered_items: Vec<()>
+    + total_items: i32
+}
+
+class "GroupFeatured" {
+    + r#type: OrderedCollectionType
+    + id: Url
+    + total_items: i32
+    + ordered_items: Vec<Page>
+}
+
+class "GroupFollowers" {
+    + id: Url
+    + r#type: CollectionType
+    + total_items: i32
+    + items: Vec<()>
+}
+
+class "GroupModerators" {
+    + r#type: OrderedCollectionType
+    + id: Url
+    + ordered_items: Vec<ObjectId<ApubPerson>>
+}
+
+class "GroupOutbox" {
+    + r#type: OrderedCollectionType
+    + id: Url
+    + total_items: i32
+    + ordered_items: Vec<AnnounceActivity>
+}
+
+class "Source" {
+    + content: String
+    + media_type: MediaTypeMarkdown
+}
+
+class "ImageObject" {
+    + kind: ImageType
+    + url: Url
+}
+
+class "Unparsed" {
+}
+
+class "Group" {
+    + kind: GroupType
+    + id: ObjectId<ApubCommunity>
+    + preferred_username: String
+    + inbox: Url
+    + followers: Option<CollectionId<ApubCommunityFollower>>
+    + public_key: PublicKey
+    + name: Option<String>
+    + content: Option<String>
+    + source: Option<Source>
+    + media_type: Option<MediaTypeHtml>
+    + summary: Option<String>
+    + icon: Option<ImageObject>
+    + image: Option<ImageObject>
+    + sensitive: Option<bool>
+    + attributed_to: Option<AttributedTo>
+    + posting_restricted_to_mods: Option<bool>
+    + outbox: CollectionId<ApubCommunityOutbox>
+    + endpoints: Option<Endpoints>
+    + featured: Option<CollectionId<ApubCommunityFeatured>>
+    + language: Vec<LanguageTag>
+    + manually_approves_followers: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + discoverable: Option<bool>
+}
+
+class "Instance" {
+    + kind: ApplicationType
+    + id: ObjectId<ApubSite>
+    + name: String
+    + preferred_username: Option<String>
+    + inbox: Url
+    + outbox: Url
+    + public_key: PublicKey
+    + content: Option<String>
+    + source: Option<Source>
+    + media_type: Option<MediaTypeHtml>
+    + summary: Option<String>
+    + icon: Option<ImageObject>
+    + image: Option<ImageObject>
+    + language: Vec<LanguageTag>
+    + content_warning: Option<String>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "Endpoints" {
+    + shared_inbox: Url
+}
+
+class "LanguageTag" {
+    + identifier: String
+    + name: String
+}
+
+class "PersonOrGroupModerators" {
+}
+
+class "AttributedToPeertube" {
+    + kind: PersonOrGroupType
+    + id: ObjectId<UserOrCommunity>
+}
+
+class "Note" {
+    + r#type: NoteType
+    + id: ObjectId<ApubComment>
+    + attributed_to: ObjectId<ApubPerson>
+    + to: Vec<Url>
+    + cc: Vec<Url>
+    + content: String
+    + in_reply_to: ObjectId<PostOrComment>
+    + media_type: Option<MediaTypeMarkdownOrHtml>
+    + source: Option<Source>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + tag: Vec<MentionOrValue>
+    + distinguished: Option<bool>
+    + language: Option<LanguageTag>
+    + attachment: Vec<Attachment>
+}
+
+class "Page" {
+    + kind: PageType
+    + id: ObjectId<ApubPost>
+    + attributed_to: AttributedTo
+    + to: Vec<Url>
+    + in_reply_to: Option<String>
+    + name: Option<String>
+    + cc: Vec<Url>
+    + content: Option<String>
+    + media_type: Option<MediaTypeMarkdownOrHtml>
+    + source: Option<Source>
+    + attachment: Vec<Attachment>
+    + image: Option<ImageObject>
+    + sensitive: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + language: Option<LanguageTag>
+    + tag: Vec<Hashtag>
+}
+
+class "Link" {
+    + href: Url
+    + media_type: Option<String>
+    + r#type: LinkType
+}
+
+class "Image" {
+    + kind: ImageType
+    + url: Url
+    + name: Option<String>
+}
+
+class "Document" {
+    + kind: DocumentType
+    + url: Url
+    + media_type: Option<String>
+    + name: Option<String>
+}
+
+class "Hashtag" {
+    + href: Url
+    + name: String
+    + kind: HashtagType
+}
+
+class "Person" {
+    + kind: UserTypes
+    + id: ObjectId<ApubPerson>
+    + preferred_username: String
+    + inbox: Url
+    + outbox: Url
+    + public_key: PublicKey
+    + name: Option<String>
+    + summary: Option<String>
+    + source: Option<Source>
+    + icon: Option<ImageObject>
+    + image: Option<ImageObject>
+    + matrix_user_id: Option<String>
+    + endpoints: Option<Endpoints>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "PrivateMessage" {
+    + kind: PrivateMessageType
+    + id: ObjectId<ApubPrivateMessage>
+    + attributed_to: ObjectId<ApubPerson>
+    + to: [ObjectId<ApubPerson>;1]
+    + content: String
+    + media_type: Option<MediaTypeHtml>
+    + source: Option<Source>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "Tombstone" {
+    + id: Url
+    + kind: TombstoneType
+}
+
+class "CmdArgs" {
+    + communities: NonZeroU32
+    + people: NonZeroU32
+    + posts: NonZeroU32
+    + read_post_pages: u32
+    + explain_insertions: bool
+}
+
+class "ValuesFromSeries" {
+    + start: i64
+    + stop: i64
+    + selection: S
+}
+
+class "current_value" {
+}
+
+class "UserBackupLists" {
+    + followed_communities: Vec<DbUrl>
+    + saved_posts: Vec<DbUrl>
+    + saved_comments: Vec<DbUrl>
+    + blocked_communities: Vec<DbUrl>
+    + blocked_users: Vec<DbUrl>
+    + blocked_instances: Vec<String>
+}
+
+class "PostId" {
+}
+
+class "PersonId" {
+}
+
+class "CommentId" {
+}
+
+class "CommunityId" {
+}
+
+class "LocalUserId" {
+}
+
+class "PrivateMessageId" {
+}
+
+class "PersonCommentMentionId" {
+}
+
+class "PersonPostMentionId" {
+}
+
+class "CommentReportId" {
+}
+
+class "CommunityReportId" {
+}
+
+class "PostReportId" {
+}
+
+class "PrivateMessageReportId" {
+}
+
+class "SiteId" {
+}
+
+class "LanguageId" {
+}
+
+class "CommentReplyId" {
+}
+
+class "InstanceId" {
+}
+
+class "ActivityId" {
+}
+
+class "LocalSiteId" {
+}
+
+class "CustomEmojiId" {
+}
+
+class "TaglineId" {
+}
+
+class "RegistrationApplicationId" {
+}
+
+class "OAuthProviderId" {
+}
+
+class "LtreeDef" {
+}
+
+class "DbUrl" {
+}
+
+class "ReportCombinedId" {
+}
+
+class "PersonContentCombinedId" {
+}
+
+class "PersonSavedCombinedId" {
+}
+
+class "ModlogCombinedId" {
+}
+
+class "InboxCombinedId" {
+}
+
+class "SearchCombinedId" {
+}
+
+class "AdminAllowInstanceId" {
+}
+
+class "AdminBlockInstanceId" {
+}
+
+class "AdminPurgePersonId" {
+}
+
+class "AdminPurgeCommunityId" {
+}
+
+class "AdminPurgeCommentId" {
+}
+
+class "AdminPurgePostId" {
+}
+
+class "ModRemovePostId" {
+}
+
+class "ModRemoveCommentId" {
+}
+
+class "ModRemoveCommunityId" {
+}
+
+class "ModLockPostId" {
+}
+
+class "ModFeaturePostId" {
+}
+
+class "ModBanFromCommunityId" {
+}
+
+class "ModBanId" {
+}
+
+class "ModChangeCommunityVisibilityId" {
+}
+
+class "ModAddCommunityId" {
+}
+
+class "ModTransferCommunityId" {
+}
+
+class "ModAddId" {
+}
+
+class "TagId" {
+}
+
+class "PaginationCursor" {
+}
+
+class "SensitiveString" {
+}
+
+class "ActivitySendTargets" {
+    + inboxes: HashSet<Url>
+    + community_followers_of: Option<CommunityId>
+    + all_instances: bool
+}
+
+class "SentActivity" {
+    + id: ActivityId
+    + ap_id: DbUrl
+    + data: Value
+    + sensitive: bool
+    + published: DateTime<Utc>
+    + send_inboxes: Vec<Option<DbUrl>>
+    + send_community_followers_of: Option<CommunityId>
+    + send_all_instances: bool
+    + actor_type: ActorType
+    + actor_apub_id: Option<DbUrl>
+}
+
+class "SentActivityForm" {
+    + ap_id: DbUrl
+    + data: Value
+    + sensitive: bool
+    + send_inboxes: Vec<Option<DbUrl>>
+    + send_community_followers_of: Option<i32>
+    + send_all_instances: bool
+    + actor_type: ActorType
+    + actor_apub_id: DbUrl
+}
+
+class "ReceivedActivity" {
+    + ap_id: DbUrl
+    + published: DateTime<Utc>
+}
+
+class "LocalUserLanguage" {
+    + local_user_id: LocalUserId
+    + language_id: LanguageId
+}
+
+class "LocalUserLanguageForm" {
+    + local_user_id: LocalUserId
+    + language_id: LanguageId
+}
+
+class "CommunityLanguage" {
+    + community_id: CommunityId
+    + language_id: LanguageId
+}
+
+class "CommunityLanguageForm" {
+    + community_id: CommunityId
+    + language_id: LanguageId
+}
+
+class "SiteLanguage" {
+    + site_id: SiteId
+    + language_id: LanguageId
+}
+
+class "SiteLanguageForm" {
+    + site_id: SiteId
+    + language_id: LanguageId
+}
+
+class "CaptchaAnswer" {
+    + uuid: Uuid
+    + answer: String
+    + published: DateTime<Utc>
+}
+
+class "CheckCaptchaAnswer" {
+    + uuid: Uuid
+    + answer: String
+}
+
+class "CaptchaAnswerForm" {
+    + answer: String
+}
+
+class "InboxCombined" {
+    + id: InboxCombinedId
+    + published: DateTime<Utc>
+    + comment_reply_id: Option<CommentReplyId>
+    + person_comment_mention_id: Option<PersonCommentMentionId>
+    + person_post_mention_id: Option<PersonPostMentionId>
+    + private_message_id: Option<PrivateMessageId>
+}
+
+class "ModlogCombined" {
+    + id: ModlogCombinedId
+    + published: DateTime<Utc>
+    + admin_allow_instance_id: Option<AdminAllowInstanceId>
+    + admin_block_instance_id: Option<AdminBlockInstanceId>
+    + admin_purge_comment_id: Option<AdminPurgeCommentId>
+    + admin_purge_community_id: Option<AdminPurgeCommunityId>
+    + admin_purge_person_id: Option<AdminPurgePersonId>
+    + admin_purge_post_id: Option<AdminPurgePostId>
+    + mod_add_id: Option<ModAddId>
+    + mod_add_community_id: Option<ModAddCommunityId>
+    + mod_ban_id: Option<ModBanId>
+    + mod_ban_from_community_id: Option<ModBanFromCommunityId>
+    + mod_feature_post_id: Option<ModFeaturePostId>
+    + mod_change_community_visibility_id: Option<ModChangeCommunityVisibilityId>
+    + mod_lock_post_id: Option<ModLockPostId>
+    + mod_remove_comment_id: Option<ModRemoveCommentId>
+    + mod_remove_community_id: Option<ModRemoveCommunityId>
+    + mod_remove_post_id: Option<ModRemovePostId>
+    + mod_transfer_community_id: Option<ModTransferCommunityId>
+}
+
+class "PersonContentCombined" {
+    + id: PersonContentCombinedId
+    + published: DateTime<Utc>
+    + post_id: Option<PostId>
+    + comment_id: Option<CommentId>
+}
+
+class "PersonSavedCombined" {
+    + id: PersonSavedCombinedId
+    + saved: DateTime<Utc>
+    + person_id: PersonId
+    + post_id: Option<PostId>
+    + comment_id: Option<CommentId>
+}
+
+class "ReportCombined" {
+    + id: ReportCombinedId
+    + published: DateTime<Utc>
+    + post_report_id: Option<PostReportId>
+    + comment_report_id: Option<CommentReportId>
+    + private_message_report_id: Option<PrivateMessageReportId>
+    + community_report_id: Option<CommunityReportId>
+}
+
+class "SearchCombined" {
+    + id: SearchCombinedId
+    + published: DateTime<Utc>
+    + score: i64
+    + post_id: Option<PostId>
+    + comment_id: Option<CommentId>
+    + community_id: Option<CommunityId>
+    + person_id: Option<PersonId>
+}
+
+class "Comment" {
+    + id: CommentId
+    + creator_id: PersonId
+    + post_id: PostId
+    + content: String
+    + removed: bool
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + deleted: bool
+    + ap_id: DbUrl
+    + local: bool
+    + path: Ltree
+    + path: String
+    + distinguished: bool
+    + language_id: LanguageId
+    + score: i64
+    + upvotes: i64
+    + downvotes: i64
+    + child_count: i32
+    + hot_rank: f64
+    + controversy_rank: f64
+    + report_count: i16
+    + unresolved_report_count: i16
+    + federation_pending: bool
+}
+
+class "CommentInsertForm" {
+    + creator_id: PersonId
+    + post_id: PostId
+    + content: String
+    + removed: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + deleted: Option<bool>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + distinguished: Option<bool>
+    + language_id: Option<LanguageId>
+    + federation_pending: Option<bool>
+}
+
+class "CommentUpdateForm" {
+    + content: Option<String>
+    + removed: Option<bool>
+    + updated: Option<Option<DateTime<Utc>>>
+    + deleted: Option<bool>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + distinguished: Option<bool>
+    + language_id: Option<LanguageId>
+    + federation_pending: Option<bool>
+}
+
+class "CommentActions" {
+    + person_id: PersonId
+    + comment_id: CommentId
+    + like_score: Option<i16>
+    + liked: Option<DateTime<Utc>>
+    + saved: Option<DateTime<Utc>>
+}
+
+class "CommentLikeForm" {
+    + person_id: PersonId
+    + comment_id: CommentId
+    + like_score: i16
+    + liked: DateTime<Utc>
+}
+
+class "CommentSavedForm" {
+    + person_id: PersonId
+    + comment_id: CommentId
+    + saved: DateTime<Utc>
+}
+
+class "CommentReply" {
+    + id: CommentReplyId
+    + recipient_id: PersonId
+    + comment_id: CommentId
+    + read: bool
+    + published: DateTime<Utc>
+}
+
+class "CommentReplyInsertForm" {
+    + recipient_id: PersonId
+    + comment_id: CommentId
+    + read: Option<bool>
+}
+
+class "CommentReplyUpdateForm" {
+    + read: Option<bool>
+}
+
+class "CommentReport" {
+    + id: CommentReportId
+    + creator_id: PersonId
+    + comment_id: CommentId
+    + original_comment_text: String
+    + reason: String
+    + resolved: bool
+    + resolver_id: Option<PersonId>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + violates_instance_rules: bool
+}
+
+class "CommentReportForm" {
+    + creator_id: PersonId
+    + comment_id: CommentId
+    + original_comment_text: String
+    + reason: String
+    + violates_instance_rules: bool
+}
+
+class "Community" {
+    + id: CommunityId
+    + name: String
+    + title: String
+    + sidebar: Option<String>
+    + removed: bool
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + deleted: bool
+    + nsfw: bool
+    + ap_id: DbUrl
+    + local: bool
+    + private_key: Option<SensitiveString>
+    + public_key: String
+    + last_refreshed_at: DateTime<Utc>
+    + icon: Option<DbUrl>
+    + banner: Option<DbUrl>
+    + followers_url: Option<DbUrl>
+    + inbox_url: DbUrl
+    + posting_restricted_to_mods: bool
+    + instance_id: InstanceId
+    + moderators_url: Option<DbUrl>
+    + featured_url: Option<DbUrl>
+    + visibility: CommunityVisibility
+    + description: Option<String>
+    + random_number: i16
+    + subscribers: i64
+    + posts: i64
+    + comments: i64
+    + users_active_day: i64
+    + users_active_week: i64
+    + users_active_month: i64
+    + users_active_half_year: i64
+    + hot_rank: f64
+    + subscribers_local: i64
+    + report_count: i16
+    + unresolved_report_count: i16
+    + interactions_month: i64
+    + local_removed: bool
+}
+
+class "CommunityInsertForm" {
+    + instance_id: InstanceId
+    + name: String
+    + title: String
+    + public_key: String
+    + sidebar: Option<String>
+    + removed: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + deleted: Option<bool>
+    + nsfw: Option<bool>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + private_key: Option<String>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + icon: Option<DbUrl>
+    + banner: Option<DbUrl>
+    + followers_url: Option<DbUrl>
+    + inbox_url: Option<DbUrl>
+    + moderators_url: Option<DbUrl>
+    + featured_url: Option<DbUrl>
+    + posting_restricted_to_mods: Option<bool>
+    + visibility: Option<CommunityVisibility>
+    + description: Option<String>
+    + local_removed: Option<bool>
+}
+
+class "CommunityUpdateForm" {
+    + title: Option<String>
+    + sidebar: Option<Option<String>>
+    + removed: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + deleted: Option<bool>
+    + nsfw: Option<bool>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + public_key: Option<String>
+    + private_key: Option<Option<String>>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + icon: Option<Option<DbUrl>>
+    + banner: Option<Option<DbUrl>>
+    + followers_url: Option<DbUrl>
+    + inbox_url: Option<DbUrl>
+    + moderators_url: Option<DbUrl>
+    + featured_url: Option<DbUrl>
+    + posting_restricted_to_mods: Option<bool>
+    + visibility: Option<CommunityVisibility>
+    + description: Option<Option<String>>
+    + local_removed: Option<bool>
+}
+
+class "CommunityActions" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + followed: Option<DateTime<Utc>>
+    + follow_state: Option<CommunityFollowerState>
+    + follow_approver_id: Option<PersonId>
+    + blocked: Option<DateTime<Utc>>
+    + became_moderator: Option<DateTime<Utc>>
+    + received_ban: Option<DateTime<Utc>>
+    + ban_expires: Option<DateTime<Utc>>
+}
+
+class "CommunityModeratorForm" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + became_moderator: DateTime<Utc>
+}
+
+class "CommunityPersonBanForm" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + ban_expires: Option<Option<DateTime<Utc>>>
+    + received_ban: DateTime<Utc>
+}
+
+class "CommunityFollowerForm" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + follow_state: CommunityFollowerState
+    + follow_approver_id: Option<PersonId>
+    + followed: DateTime<Utc>
+}
+
+class "CommunityBlockForm" {
+    + community_id: CommunityId
+    + person_id: PersonId
+    + blocked: DateTime<Utc>
+}
+
+class "CommunityReport" {
+    + id: CommunityReportId
+    + creator_id: PersonId
+    + community_id: CommunityId
+    + original_community_name: String
+    + original_community_title: String
+    + original_community_description: Option<String>
+    + original_community_sidebar: Option<String>
+    + original_community_icon: Option<String>
+    + original_community_banner: Option<String>
+    + reason: String
+    + resolved: bool
+    + resolver_id: Option<PersonId>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "CommunityReportForm" {
+    + creator_id: PersonId
+    + community_id: CommunityId
+    + original_community_name: String
+    + original_community_title: String
+    + original_community_description: Option<String>
+    + original_community_sidebar: Option<String>
+    + original_community_icon: Option<DbUrl>
+    + original_community_banner: Option<DbUrl>
+    + reason: String
+}
+
+class "CustomEmoji" {
+    + id: CustomEmojiId
+    + shortcode: String
+    + image_url: DbUrl
+    + alt_text: String
+    + category: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "CustomEmojiInsertForm" {
+    + shortcode: String
+    + image_url: DbUrl
+    + alt_text: String
+    + category: String
+}
+
+class "CustomEmojiUpdateForm" {
+    + image_url: DbUrl
+    + alt_text: String
+    + category: String
+}
+
+class "CustomEmojiKeyword" {
+    + custom_emoji_id: CustomEmojiId
+    + keyword: String
+}
+
+class "CustomEmojiKeywordInsertForm" {
+    + custom_emoji_id: CustomEmojiId
+    + keyword: String
+}
+
+class "EmailVerification" {
+    + id: i32
+    + local_user_id: LocalUserId
+    + email: String
+    + verification_token: String
+    + published: DateTime<Utc>
+}
+
+class "EmailVerificationForm" {
+    + local_user_id: LocalUserId
+    + email: String
+    + verification_token: String
+}
+
+class "FederationAllowList" {
+    + instance_id: InstanceId
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "FederationAllowListForm" {
+    + instance_id: InstanceId
+    + updated: Option<DateTime<Utc>>
+}
+
+class "FederationBlockList" {
+    + instance_id: InstanceId
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + expires: Option<DateTime<Utc>>
+}
+
+class "FederationBlockListForm" {
+    + instance_id: InstanceId
+    + updated: Option<DateTime<Utc>>
+    + expires: Option<DateTime<Utc>>
+}
+
+class "FederationQueueState" {
+    + instance_id: InstanceId
+    + last_successful_id: Option<ActivityId>
+    + last_successful_published_time: Option<DateTime<Utc>>
+    + fail_count: i32
+    + last_retry: Option<DateTime<Utc>>
+}
+
+class "LocalImage" {
+    + local_user_id: Option<LocalUserId>
+    + pictrs_alias: String
+    + published: DateTime<Utc>
+}
+
+class "LocalImageForm" {
+    + local_user_id: Option<LocalUserId>
+    + pictrs_alias: String
+}
+
+class "RemoteImage" {
+    + link: DbUrl
+    + published: DateTime<Utc>
+}
+
+class "ImageDetails" {
+    + link: DbUrl
+    + width: i32
+    + height: i32
+    + content_type: String
+    + blurhash: Option<String>
+}
+
+class "ImageDetailsInsertForm" {
+    + link: DbUrl
+    + width: i32
+    + height: i32
+    + content_type: String
+    + blurhash: Option<String>
+}
+
+class "Instance" {
+    + id: InstanceId
+    + domain: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + software: Option<String>
+    + version: Option<String>
+}
+
+class "InstanceForm" {
+    + domain: String
+    + software: Option<String>
+    + version: Option<String>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "InstanceActions" {
+    + person_id: PersonId
+    + instance_id: InstanceId
+    + blocked: Option<DateTime<Utc>>
+    + received_ban: Option<DateTime<Utc>>
+    + ban_expires: Option<DateTime<Utc>>
+}
+
+class "InstanceBlockForm" {
+    + person_id: PersonId
+    + instance_id: InstanceId
+    + blocked: DateTime<Utc>
+}
+
+class "InstanceBanForm" {
+    + person_id: PersonId
+    + instance_id: InstanceId
+    + received_ban: DateTime<Utc>
+    + ban_expires: Option<DateTime<Utc>>
+}
+
+class "LocalUserKeywordBlock" {
+    + local_user_id: LocalUserId
+    + keyword: String
+}
+
+class "LocalUserKeywordBlockForm" {
+    + local_user_id: LocalUserId
+    + keyword: String
+}
+
+class "Language" {
+    + id: LanguageId
+    + code: String
+    + name: String
+}
+
+class "LocalSite" {
+    + id: LocalSiteId
+    + site_id: SiteId
+    + site_setup: bool
+    + community_creation_admin_only: bool
+    + require_email_verification: bool
+    + application_question: Option<String>
+    + private_instance: bool
+    + default_theme: String
+    + default_post_listing_type: ListingType
+    + legal_information: Option<String>
+    + hide_modlog_mod_names: bool
+    + application_email_admins: bool
+    + slur_filter_regex: Option<String>
+    + actor_name_max_length: i32
+    + federation_enabled: bool
+    + captcha_enabled: bool
+    + captcha_difficulty: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + registration_mode: RegistrationMode
+    + reports_email_admins: bool
+    + federation_signed_fetch: bool
+    + default_post_listing_mode: PostListingMode
+    + default_post_sort_type: PostSortType
+    + default_comment_sort_type: CommentSortType
+    + oauth_registration: bool
+    + post_upvotes: FederationMode
+    + post_downvotes: FederationMode
+    + comment_upvotes: FederationMode
+    + comment_downvotes: FederationMode
+    + default_post_time_range_seconds: Option<i32>
+    + disallow_nsfw_content: bool
+    + users: i64
+    + posts: i64
+    + comments: i64
+    + communities: i64
+    + users_active_day: i64
+    + users_active_week: i64
+    + users_active_month: i64
+    + users_active_half_year: i64
+    + disable_email_notifications: bool
+}
+
+class "LocalSiteInsertForm" {
+    + site_id: SiteId
+    + site_setup: Option<bool>
+    + community_creation_admin_only: Option<bool>
+    + require_email_verification: Option<bool>
+    + application_question: Option<String>
+    + private_instance: Option<bool>
+    + default_theme: Option<String>
+    + default_post_listing_type: Option<ListingType>
+    + legal_information: Option<String>
+    + hide_modlog_mod_names: Option<bool>
+    + application_email_admins: Option<bool>
+    + slur_filter_regex: Option<String>
+    + actor_name_max_length: Option<i32>
+    + federation_enabled: Option<bool>
+    + captcha_enabled: Option<bool>
+    + captcha_difficulty: Option<String>
+    + registration_mode: Option<RegistrationMode>
+    + reports_email_admins: Option<bool>
+    + federation_signed_fetch: Option<bool>
+    + default_post_listing_mode: Option<PostListingMode>
+    + default_post_sort_type: Option<PostSortType>
+    + default_comment_sort_type: Option<CommentSortType>
+    + oauth_registration: Option<bool>
+    + post_upvotes: Option<FederationMode>
+    + post_downvotes: Option<FederationMode>
+    + comment_upvotes: Option<FederationMode>
+    + comment_downvotes: Option<FederationMode>
+    + default_post_time_range_seconds: Option<Option<i32>>
+    + disallow_nsfw_content: bool
+    + disable_email_notifications: bool
+}
+
+class "LocalSiteUpdateForm" {
+    + site_setup: Option<bool>
+    + community_creation_admin_only: Option<bool>
+    + require_email_verification: Option<bool>
+    + application_question: Option<Option<String>>
+    + private_instance: Option<bool>
+    + default_theme: Option<String>
+    + default_post_listing_type: Option<ListingType>
+    + legal_information: Option<Option<String>>
+    + hide_modlog_mod_names: Option<bool>
+    + application_email_admins: Option<bool>
+    + slur_filter_regex: Option<Option<String>>
+    + actor_name_max_length: Option<i32>
+    + federation_enabled: Option<bool>
+    + captcha_enabled: Option<bool>
+    + captcha_difficulty: Option<String>
+    + registration_mode: Option<RegistrationMode>
+    + reports_email_admins: Option<bool>
+    + updated: Option<Option<DateTime<Utc>>>
+    + federation_signed_fetch: Option<bool>
+    + default_post_listing_mode: Option<PostListingMode>
+    + default_post_sort_type: Option<PostSortType>
+    + default_comment_sort_type: Option<CommentSortType>
+    + oauth_registration: Option<bool>
+    + post_upvotes: Option<FederationMode>
+    + post_downvotes: Option<FederationMode>
+    + comment_upvotes: Option<FederationMode>
+    + comment_downvotes: Option<FederationMode>
+    + default_post_time_range_seconds: Option<Option<i32>>
+    + disallow_nsfw_content: Option<bool>
+    + disable_email_notifications: Option<bool>
+}
+
+class "LocalSiteRateLimit" {
+    + local_site_id: LocalSiteId
+    + message: i32
+    + message_per_second: i32
+    + post: i32
+    + post_per_second: i32
+    + register: i32
+    + register_per_second: i32
+    + image: i32
+    + image_per_second: i32
+    + comment: i32
+    + comment_per_second: i32
+    + search: i32
+    + search_per_second: i32
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + import_user_settings: i32
+    + import_user_settings_per_second: i32
+}
+
+class "LocalSiteRateLimitInsertForm" {
+    + local_site_id: LocalSiteId
+    + message: Option<i32>
+    + message_per_second: Option<i32>
+    + post: Option<i32>
+    + post_per_second: Option<i32>
+    + register: Option<i32>
+    + register_per_second: Option<i32>
+    + image: Option<i32>
+    + image_per_second: Option<i32>
+    + comment: Option<i32>
+    + comment_per_second: Option<i32>
+    + search: Option<i32>
+    + search_per_second: Option<i32>
+    + import_user_settings: Option<i32>
+    + import_user_settings_per_second: Option<i32>
+}
+
+class "LocalSiteRateLimitUpdateForm" {
+    + message: Option<i32>
+    + message_per_second: Option<i32>
+    + post: Option<i32>
+    + post_per_second: Option<i32>
+    + register: Option<i32>
+    + register_per_second: Option<i32>
+    + image: Option<i32>
+    + image_per_second: Option<i32>
+    + comment: Option<i32>
+    + comment_per_second: Option<i32>
+    + search: Option<i32>
+    + search_per_second: Option<i32>
+    + import_user_settings: Option<i32>
+    + import_user_settings_per_second: Option<i32>
+    + updated: Option<Option<DateTime<Utc>>>
+}
+
+class "LocalSiteUrlBlocklist" {
+    + id: i32
+    + url: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "LocalSiteUrlBlocklistForm" {
+    + url: String
+    + updated: Option<DateTime<Utc>>
+}
+
+class "LocalUser" {
+    + id: LocalUserId
+    + person_id: PersonId
+    + password_encrypted: Option<SensitiveString>
+    + email: Option<SensitiveString>
+    + show_nsfw: bool
+    + theme: String
+    + default_post_sort_type: PostSortType
+    + default_listing_type: ListingType
+    + interface_language: String
+    + show_avatars: bool
+    + send_notifications_to_email: bool
+    + show_bot_accounts: bool
+    + show_read_posts: bool
+    + email_verified: bool
+    + accepted_application: bool
+    + totp_2fa_secret: Option<SensitiveString>
+    + open_links_in_new_tab: bool
+    + blur_nsfw: bool
+    + infinite_scroll_enabled: bool
+    + admin: bool
+    + post_listing_mode: PostListingMode
+    + totp_2fa_enabled: bool
+    + enable_keyboard_navigation: bool
+    + enable_animated_images: bool
+    + enable_private_messages: bool
+    + collapse_bot_comments: bool
+    + default_comment_sort_type: CommentSortType
+    + auto_mark_fetched_posts_as_read: bool
+    + last_donation_notification: DateTime<Utc>
+    + hide_media: bool
+    + default_post_time_range_seconds: Option<i32>
+    + show_score: bool
+    + show_upvotes: bool
+    + show_downvotes: bool
+    + show_upvote_percentage: bool
+}
+
+class "LocalUserInsertForm" {
+    + person_id: PersonId
+    + password_encrypted: Option<String>
+    + email: Option<String>
+    + show_nsfw: Option<bool>
+    + theme: Option<String>
+    + default_post_sort_type: Option<PostSortType>
+    + default_listing_type: Option<ListingType>
+    + interface_language: Option<String>
+    + show_avatars: Option<bool>
+    + send_notifications_to_email: Option<bool>
+    + show_bot_accounts: Option<bool>
+    + show_read_posts: Option<bool>
+    + email_verified: Option<bool>
+    + accepted_application: Option<bool>
+    + totp_2fa_secret: Option<Option<String>>
+    + open_links_in_new_tab: Option<bool>
+    + blur_nsfw: Option<bool>
+    + infinite_scroll_enabled: Option<bool>
+    + admin: Option<bool>
+    + post_listing_mode: Option<PostListingMode>
+    + totp_2fa_enabled: Option<bool>
+    + enable_keyboard_navigation: Option<bool>
+    + enable_animated_images: Option<bool>
+    + enable_private_messages: Option<bool>
+    + collapse_bot_comments: Option<bool>
+    + default_comment_sort_type: Option<CommentSortType>
+    + auto_mark_fetched_posts_as_read: Option<bool>
+    + last_donation_notification: Option<DateTime<Utc>>
+    + hide_media: Option<bool>
+    + default_post_time_range_seconds: Option<Option<i32>>
+    + show_score: Option<bool>
+    + show_upvotes: Option<bool>
+    + show_downvotes: Option<bool>
+    + show_upvote_percentage: Option<bool>
+}
+
+class "LocalUserUpdateForm" {
+    + password_encrypted: Option<String>
+    + email: Option<Option<String>>
+    + show_nsfw: Option<bool>
+    + theme: Option<String>
+    + default_post_sort_type: Option<PostSortType>
+    + default_listing_type: Option<ListingType>
+    + interface_language: Option<String>
+    + show_avatars: Option<bool>
+    + send_notifications_to_email: Option<bool>
+    + show_bot_accounts: Option<bool>
+    + show_read_posts: Option<bool>
+    + email_verified: Option<bool>
+    + accepted_application: Option<bool>
+    + totp_2fa_secret: Option<Option<String>>
+    + open_links_in_new_tab: Option<bool>
+    + blur_nsfw: Option<bool>
+    + infinite_scroll_enabled: Option<bool>
+    + admin: Option<bool>
+    + post_listing_mode: Option<PostListingMode>
+    + totp_2fa_enabled: Option<bool>
+    + enable_keyboard_navigation: Option<bool>
+    + enable_animated_images: Option<bool>
+    + enable_private_messages: Option<bool>
+    + collapse_bot_comments: Option<bool>
+    + default_comment_sort_type: Option<CommentSortType>
+    + auto_mark_fetched_posts_as_read: Option<bool>
+    + last_donation_notification: Option<DateTime<Utc>>
+    + hide_media: Option<bool>
+    + default_post_time_range_seconds: Option<Option<i32>>
+    + show_score: Option<bool>
+    + show_upvotes: Option<bool>
+    + show_downvotes: Option<bool>
+    + show_upvote_percentage: Option<bool>
+}
+
+class "LoginToken" {
+    + token: SensitiveString
+    + user_id: LocalUserId
+    + published: DateTime<Utc>
+    + ip: Option<String>
+    + user_agent: Option<String>
+}
+
+class "LoginTokenCreateForm" {
+    + token: SensitiveString
+    + user_id: LocalUserId
+    + ip: Option<String>
+    + user_agent: Option<String>
+}
+
+class "AdminPurgePerson" {
+    + id: AdminPurgePersonId
+    + admin_person_id: PersonId
+    + reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "AdminPurgePersonForm" {
+    + admin_person_id: PersonId
+    + reason: Option<String>
+}
+
+class "AdminPurgeCommunity" {
+    + id: AdminPurgeCommunityId
+    + admin_person_id: PersonId
+    + reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "AdminPurgeCommunityForm" {
+    + admin_person_id: PersonId
+    + reason: Option<String>
+}
+
+class "AdminPurgePost" {
+    + id: AdminPurgePostId
+    + admin_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "AdminPurgePostForm" {
+    + admin_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+}
+
+class "AdminPurgeComment" {
+    + id: AdminPurgeCommentId
+    + admin_person_id: PersonId
+    + post_id: PostId
+    + reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "AdminPurgeCommentForm" {
+    + admin_person_id: PersonId
+    + post_id: PostId
+    + reason: Option<String>
+}
+
+class "AdminAllowInstance" {
+    + id: AdminAllowInstanceId
+    + instance_id: InstanceId
+    + admin_person_id: PersonId
+    + allowed: bool
+    + reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "AdminAllowInstanceForm" {
+    + instance_id: InstanceId
+    + admin_person_id: PersonId
+    + allowed: bool
+    + reason: Option<String>
+}
+
+class "AdminBlockInstance" {
+    + id: AdminBlockInstanceId
+    + instance_id: InstanceId
+    + admin_person_id: PersonId
+    + blocked: bool
+    + reason: Option<String>
+    + expires: Option<DateTime<Utc>>
+    + published: DateTime<Utc>
+}
+
+class "AdminBlockInstanceForm" {
+    + instance_id: InstanceId
+    + admin_person_id: PersonId
+    + blocked: bool
+    + reason: Option<String>
+}
+
+class "ModRemovePost" {
+    + id: ModRemovePostId
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + reason: Option<String>
+    + removed: bool
+    + published: DateTime<Utc>
+}
+
+class "ModRemovePostForm" {
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + reason: Option<String>
+    + removed: Option<bool>
+}
+
+class "ModLockPost" {
+    + id: ModLockPostId
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + locked: bool
+    + published: DateTime<Utc>
+}
+
+class "ModLockPostForm" {
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + locked: Option<bool>
+}
+
+class "ModFeaturePost" {
+    + id: ModFeaturePostId
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + featured: bool
+    + published: DateTime<Utc>
+    + is_featured_community: bool
+}
+
+class "ModFeaturePostForm" {
+    + mod_person_id: PersonId
+    + post_id: PostId
+    + featured: Option<bool>
+    + is_featured_community: Option<bool>
+}
+
+class "ModRemoveComment" {
+    + id: ModRemoveCommentId
+    + mod_person_id: PersonId
+    + comment_id: CommentId
+    + reason: Option<String>
+    + removed: bool
+    + published: DateTime<Utc>
+}
+
+class "ModRemoveCommentForm" {
+    + mod_person_id: PersonId
+    + comment_id: CommentId
+    + reason: Option<String>
+    + removed: Option<bool>
+}
+
+class "ModRemoveCommunity" {
+    + id: ModRemoveCommunityId
+    + mod_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+    + removed: bool
+    + published: DateTime<Utc>
+}
+
+class "ModRemoveCommunityForm" {
+    + mod_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+    + removed: Option<bool>
+}
+
+class "ModBanFromCommunity" {
+    + id: ModBanFromCommunityId
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+    + banned: bool
+    + expires: Option<DateTime<Utc>>
+    + published: DateTime<Utc>
+}
+
+class "ModBanFromCommunityForm" {
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+    + reason: Option<String>
+    + banned: Option<bool>
+    + expires: Option<DateTime<Utc>>
+}
+
+class "ModBan" {
+    + id: ModBanId
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + reason: Option<String>
+    + banned: bool
+    + expires: Option<DateTime<Utc>>
+    + published: DateTime<Utc>
+    + instance_id: InstanceId
+}
+
+class "ModChangeCommunityVisibilityForm" {
+    + community_id: CommunityId
+    + mod_person_id: PersonId
+    + reason: Option<String>
+    + visibility: CommunityVisibility
+}
+
+class "ModChangeCommunityVisibility" {
+    + id: ModChangeCommunityVisibilityId
+    + community_id: CommunityId
+    + mod_person_id: PersonId
+    + published: DateTime<Utc>
+    + reason: Option<String>
+    + visibility: CommunityVisibility
+}
+
+class "ModBanForm" {
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + reason: Option<String>
+    + banned: Option<bool>
+    + expires: Option<DateTime<Utc>>
+    + instance_id: InstanceId
+}
+
+class "ModAddCommunity" {
+    + id: ModAddCommunityId
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+    + removed: bool
+    + published: DateTime<Utc>
+}
+
+class "ModAddCommunityForm" {
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+    + removed: Option<bool>
+}
+
+class "ModTransferCommunity" {
+    + id: ModTransferCommunityId
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+    + published: DateTime<Utc>
+}
+
+class "ModTransferCommunityForm" {
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + community_id: CommunityId
+}
+
+class "ModAdd" {
+    + id: ModAddId
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + removed: bool
+    + published: DateTime<Utc>
+}
+
+class "ModAddForm" {
+    + mod_person_id: PersonId
+    + other_person_id: PersonId
+    + removed: Option<bool>
+}
+
+class "OAuthAccount" {
+    + local_user_id: LocalUserId
+    + oauth_provider_id: OAuthProviderId
+    + oauth_user_id: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "OAuthAccountInsertForm" {
+    + local_user_id: LocalUserId
+    + oauth_provider_id: OAuthProviderId
+    + oauth_user_id: String
+}
+
+class "OAuthProvider" {
+    + id: OAuthProviderId
+    + display_name: String
+    + issuer: DbUrl
+    + authorization_endpoint: DbUrl
+    + token_endpoint: DbUrl
+    + userinfo_endpoint: DbUrl
+    + id_claim: String
+    + client_id: String
+    + client_secret: SensitiveString
+    + scopes: String
+    + auto_verify_email: bool
+    + account_linking_enabled: bool
+    + enabled: bool
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + use_pkce: bool
+}
+
+class "PublicOAuthProvider" {
+}
+
+class "OAuthProviderInsertForm" {
+    + display_name: String
+    + issuer: DbUrl
+    + authorization_endpoint: DbUrl
+    + token_endpoint: DbUrl
+    + userinfo_endpoint: DbUrl
+    + id_claim: String
+    + client_id: String
+    + client_secret: String
+    + scopes: String
+    + auto_verify_email: Option<bool>
+    + account_linking_enabled: Option<bool>
+    + use_pkce: Option<bool>
+    + enabled: Option<bool>
+}
+
+class "OAuthProviderUpdateForm" {
+    + display_name: Option<String>
+    + authorization_endpoint: Option<DbUrl>
+    + token_endpoint: Option<DbUrl>
+    + userinfo_endpoint: Option<DbUrl>
+    + id_claim: Option<String>
+    + client_secret: Option<String>
+    + scopes: Option<String>
+    + auto_verify_email: Option<bool>
+    + account_linking_enabled: Option<bool>
+    + use_pkce: Option<bool>
+    + enabled: Option<bool>
+    + updated: Option<Option<DateTime<Utc>>>
+}
+
+class "PasswordResetRequest" {
+    + id: i32
+    + token: SensitiveString
+    + published: DateTime<Utc>
+    + local_user_id: LocalUserId
+}
+
+class "PasswordResetRequestForm" {
+    + local_user_id: LocalUserId
+    + token: SensitiveString
+}
+
+class "Person" {
+    + id: PersonId
+    + name: String
+    + display_name: Option<String>
+    + avatar: Option<DbUrl>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + ap_id: DbUrl
+    + bio: Option<String>
+    + local: bool
+    + private_key: Option<SensitiveString>
+    + public_key: String
+    + last_refreshed_at: DateTime<Utc>
+    + banner: Option<DbUrl>
+    + deleted: bool
+    + inbox_url: DbUrl
+    + matrix_user_id: Option<String>
+    + bot_account: bool
+    + instance_id: InstanceId
+    + post_count: i64
+    + post_score: i64
+    + comment_count: i64
+    + comment_score: i64
+}
+
+class "PersonInsertForm" {
+    + name: String
+    + public_key: String
+    + instance_id: InstanceId
+    + display_name: Option<String>
+    + avatar: Option<DbUrl>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + ap_id: Option<DbUrl>
+    + bio: Option<String>
+    + local: Option<bool>
+    + private_key: Option<String>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + banner: Option<DbUrl>
+    + deleted: Option<bool>
+    + inbox_url: Option<DbUrl>
+    + matrix_user_id: Option<String>
+    + bot_account: Option<bool>
+}
+
+class "PersonUpdateForm" {
+    + display_name: Option<Option<String>>
+    + avatar: Option<Option<DbUrl>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + ap_id: Option<DbUrl>
+    + bio: Option<Option<String>>
+    + local: Option<bool>
+    + public_key: Option<String>
+    + private_key: Option<Option<String>>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + banner: Option<Option<DbUrl>>
+    + deleted: Option<bool>
+    + inbox_url: Option<DbUrl>
+    + matrix_user_id: Option<Option<String>>
+    + bot_account: Option<bool>
+}
+
+class "PersonActions" {
+    + target_id: PersonId
+    + person_id: PersonId
+    + followed: Option<DateTime<Utc>>
+    + follow_pending: Option<bool>
+    + blocked: Option<DateTime<Utc>>
+}
+
+class "PersonFollowerForm" {
+    + target_id: PersonId
+    + person_id: PersonId
+    + follow_pending: bool
+    + followed: DateTime<Utc>
+}
+
+class "PersonBlockForm" {
+    + person_id: PersonId
+    + target_id: PersonId
+    + blocked: DateTime<Utc>
+}
+
+class "PersonCommentMention" {
+    + id: PersonCommentMentionId
+    + recipient_id: PersonId
+    + comment_id: CommentId
+    + read: bool
+    + published: DateTime<Utc>
+}
+
+class "PersonCommentMentionInsertForm" {
+    + recipient_id: PersonId
+    + comment_id: CommentId
+    + read: Option<bool>
+}
+
+class "PersonCommentMentionUpdateForm" {
+    + read: Option<bool>
+}
+
+class "PersonPostMention" {
+    + id: PersonPostMentionId
+    + recipient_id: PersonId
+    + post_id: PostId
+    + read: bool
+    + published: DateTime<Utc>
+}
+
+class "PersonPostMentionInsertForm" {
+    + recipient_id: PersonId
+    + post_id: PostId
+    + read: Option<bool>
+}
+
+class "PersonPostMentionUpdateForm" {
+    + read: Option<bool>
+}
+
+class "Post" {
+    + id: PostId
+    + name: String
+    + url: Option<DbUrl>
+    + body: Option<String>
+    + creator_id: PersonId
+    + community_id: CommunityId
+    + removed: bool
+    + locked: bool
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + deleted: bool
+    + nsfw: bool
+    + embed_title: Option<String>
+    + embed_description: Option<String>
+    + thumbnail_url: Option<DbUrl>
+    + ap_id: DbUrl
+    + local: bool
+    + embed_video_url: Option<DbUrl>
+    + language_id: LanguageId
+    + featured_community: bool
+    + featured_local: bool
+    + url_content_type: Option<String>
+    + alt_text: Option<String>
+    + scheduled_publish_time: Option<DateTime<Utc>>
+    + comments: i64
+    + score: i64
+    + upvotes: i64
+    + downvotes: i64
+    + newest_comment_time_necro: DateTime<Utc>
+    + newest_comment_time: DateTime<Utc>
+    + hot_rank: f64
+    + hot_rank_active: f64
+    + controversy_rank: f64
+    + scaled_rank: f64
+    + report_count: i16
+    + unresolved_report_count: i16
+    + federation_pending: bool
+}
+
+class "PostInsertForm" {
+    + name: String
+    + creator_id: PersonId
+    + community_id: CommunityId
+    + nsfw: Option<bool>
+    + url: Option<DbUrl>
+    + body: Option<String>
+    + removed: Option<bool>
+    + locked: Option<bool>
+    + updated: Option<DateTime<Utc>>
+    + published: Option<DateTime<Utc>>
+    + deleted: Option<bool>
+    + embed_title: Option<String>
+    + embed_description: Option<String>
+    + embed_video_url: Option<DbUrl>
+    + thumbnail_url: Option<DbUrl>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + language_id: Option<LanguageId>
+    + featured_community: Option<bool>
+    + featured_local: Option<bool>
+    + url_content_type: Option<String>
+    + alt_text: Option<String>
+    + scheduled_publish_time: Option<DateTime<Utc>>
+    + federation_pending: Option<bool>
+}
+
+class "PostUpdateForm" {
+    + name: Option<String>
+    + nsfw: Option<bool>
+    + url: Option<Option<DbUrl>>
+    + body: Option<Option<String>>
+    + removed: Option<bool>
+    + locked: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + deleted: Option<bool>
+    + embed_title: Option<Option<String>>
+    + embed_description: Option<Option<String>>
+    + embed_video_url: Option<Option<DbUrl>>
+    + thumbnail_url: Option<Option<DbUrl>>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + language_id: Option<LanguageId>
+    + featured_community: Option<bool>
+    + featured_local: Option<bool>
+    + url_content_type: Option<Option<String>>
+    + alt_text: Option<Option<String>>
+    + scheduled_publish_time: Option<Option<DateTime<Utc>>>
+    + federation_pending: Option<bool>
+}
+
+class "PostActions" {
+    + post_id: PostId
+    + person_id: PersonId
+    + read: Option<DateTime<Utc>>
+    + read_comments: Option<DateTime<Utc>>
+    + read_comments_amount: Option<i64>
+    + saved: Option<DateTime<Utc>>
+    + liked: Option<DateTime<Utc>>
+    + like_score: Option<i16>
+    + hidden: Option<DateTime<Utc>>
+}
+
+class "PostLikeForm" {
+    + post_id: PostId
+    + person_id: PersonId
+    + like_score: i16
+    + liked: DateTime<Utc>
+}
+
+class "PostSavedForm" {
+    + post_id: PostId
+    + person_id: PersonId
+    + saved: DateTime<Utc>
+}
+
+class "PostReadForm" {
+    + post_id: PostId
+    + person_id: PersonId
+    + read: DateTime<Utc>
+}
+
+class "PostReadCommentsForm" {
+    + post_id: PostId
+    + person_id: PersonId
+    + read_comments_amount: i64
+    + read_comments: DateTime<Utc>
+}
+
+class "PostHideForm" {
+    + post_id: PostId
+    + person_id: PersonId
+    + hidden: DateTime<Utc>
+}
+
+class "PostReport" {
+    + id: PostReportId
+    + creator_id: PersonId
+    + post_id: PostId
+    + original_post_name: String
+    + original_post_url: Option<DbUrl>
+    + original_post_body: Option<String>
+    + reason: String
+    + resolved: bool
+    + resolver_id: Option<PersonId>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + violates_instance_rules: bool
+}
+
+class "PostReportForm" {
+    + creator_id: PersonId
+    + post_id: PostId
+    + original_post_name: String
+    + original_post_url: Option<DbUrl>
+    + original_post_body: Option<String>
+    + reason: String
+    + violates_instance_rules: bool
+}
+
+class "PostTag" {
+    + post_id: PostId
+    + tag_id: TagId
+    + published: DateTime<Utc>
+}
+
+class "PostTagForm" {
+    + post_id: PostId
+    + tag_id: TagId
+}
+
+class "PrivateMessage" {
+    + id: PrivateMessageId
+    + creator_id: PersonId
+    + recipient_id: PersonId
+    + content: String
+    + deleted: bool
+    + read: bool
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + ap_id: DbUrl
+    + local: bool
+    + removed: bool
+}
+
+class "PrivateMessageInsertForm" {
+    + creator_id: PersonId
+    + recipient_id: PersonId
+    + content: String
+    + deleted: Option<bool>
+    + read: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<DateTime<Utc>>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+}
+
+class "PrivateMessageUpdateForm" {
+    + content: Option<String>
+    + deleted: Option<bool>
+    + read: Option<bool>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + ap_id: Option<DbUrl>
+    + local: Option<bool>
+    + removed: Option<bool>
+}
+
+class "PrivateMessageReport" {
+    + id: PrivateMessageReportId
+    + creator_id: PersonId
+    + private_message_id: PrivateMessageId
+    + original_pm_text: String
+    + reason: String
+    + resolved: bool
+    + resolver_id: Option<PersonId>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "PrivateMessageReportForm" {
+    + creator_id: PersonId
+    + private_message_id: PrivateMessageId
+    + original_pm_text: String
+    + reason: String
+}
+
+class "RegistrationApplication" {
+    + id: RegistrationApplicationId
+    + local_user_id: LocalUserId
+    + answer: String
+    + admin_id: Option<PersonId>
+    + deny_reason: Option<String>
+    + published: DateTime<Utc>
+}
+
+class "RegistrationApplicationInsertForm" {
+    + local_user_id: LocalUserId
+    + answer: String
+}
+
+class "RegistrationApplicationUpdateForm" {
+    + admin_id: Option<Option<PersonId>>
+    + deny_reason: Option<Option<String>>
+}
+
+class "Secret" {
+    + id: i32
+    + jwt_secret: SensitiveString
+}
+
+class "Site" {
+    + id: SiteId
+    + name: String
+    + sidebar: Option<String>
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + icon: Option<DbUrl>
+    + banner: Option<DbUrl>
+    + description: Option<String>
+    + ap_id: DbUrl
+    + last_refreshed_at: DateTime<Utc>
+    + inbox_url: DbUrl
+    + private_key: Option<SensitiveString>
+    + public_key: String
+    + instance_id: InstanceId
+    + content_warning: Option<String>
+}
+
+class "SiteInsertForm" {
+    + name: String
+    + instance_id: InstanceId
+    + sidebar: Option<String>
+    + updated: Option<DateTime<Utc>>
+    + icon: Option<DbUrl>
+    + banner: Option<DbUrl>
+    + description: Option<String>
+    + ap_id: Option<DbUrl>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + inbox_url: Option<DbUrl>
+    + private_key: Option<String>
+    + public_key: Option<String>
+    + content_warning: Option<String>
+}
+
+class "SiteUpdateForm" {
+    + name: Option<String>
+    + sidebar: Option<Option<String>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + icon: Option<Option<DbUrl>>
+    + banner: Option<Option<DbUrl>>
+    + description: Option<Option<String>>
+    + ap_id: Option<DbUrl>
+    + last_refreshed_at: Option<DateTime<Utc>>
+    + inbox_url: Option<DbUrl>
+    + private_key: Option<Option<String>>
+    + public_key: Option<String>
+    + content_warning: Option<Option<String>>
+}
+
+class "Tag" {
+    + id: TagId
+    + ap_id: DbUrl
+    + display_name: String
+    + community_id: CommunityId
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+    + deleted: bool
+}
+
+class "TagInsertForm" {
+    + ap_id: DbUrl
+    + display_name: String
+    + community_id: CommunityId
+}
+
+class "TagUpdateForm" {
+    + ap_id: Option<DbUrl>
+    + display_name: Option<String>
+    + community_id: Option<CommunityId>
+    + published: Option<DateTime<Utc>>
+    + updated: Option<Option<DateTime<Utc>>>
+    + deleted: Option<bool>
+}
+
+class "TagsView" {
+}
+
+class "Tagline" {
+    + id: TaglineId
+    + content: String
+    + published: DateTime<Utc>
+    + updated: Option<DateTime<Utc>>
+}
+
+class "TaglineInsertForm" {
+    + content: String
+}
+
+class "TaglineUpdateForm" {
+    + content: String
+    + updated: DateTime<Utc>
+}
+
+class "UpleteBuilder" {
+    + query: Q
+    + set_null_columns: Vec<DynColumn>
+}
+
+class "UpleteQuery" {
+    + update_subquery: Box<dynQueryFragment<Pg>+Send+'static>
+    + delete_subquery: Box<dynQueryFragment<Pg>+Send+'static>
+    + table: Box<dynQueryFragment<Pg>+Send+'static>
+    + primary_key: Box<dynQueryFragment<Pg>+Send+'static>
+    + set_null_columns: Vec<DynColumn>
+}
+
+class "AllNull" {
+}
+
+class "DynColumn" {
+    + type_id: TypeId
+    + name: &'staticstr
+}
+
+class "Count" {
+    + updated: i64
+    + deleted: i64
+}
+
+class "LowerKey" {
+}
+
+class "Subpath" {
+}
+
+class "Commented" {
+    + comment: String
+    + inner: T
+}
+
+class "NoCertVerifier" {
+}
+
+class "MigrationHarnessWrapper" {
+    + conn: &'amutPgConnection
+    + diff_checked_migration_name: Option<String>
+    + options: &'aOptions
+}
+
+class "Options" {
+    + enable_diff_check: bool
+    + revert: bool
+    + run: bool
+    + print_output: bool
+    + limit: Option<u64>
+}
+
+class "CommentQuery" {
+    + listing_type: Option<ListingType>
+    + sort: Option<CommentSortType>
+    + time_range_seconds: Option<i32>
+    + community_id: Option<CommunityId>
+    + post_id: Option<PostId>
+    + parent_path: Option<Ltree>
+    + local_user: Option<&'aLocalUser>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+    + max_depth: Option<i32>
+    + cursor_data: Option<Comment>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "CommentView" {
+    + comment: Comment
+    + creator: Person
+    + post: Post
+    + community: Community
+    + community_actions: Option<CommunityActions>
+    + comment_actions: Option<CommentActions>
+    + person_actions: Option<PersonActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_community_actions: Option<CommunityActions>
+    + creator_is_admin: bool
+    + post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "CommentSlimView" {
+    + comment: Comment
+    + creator: Person
+    + comment_actions: Option<CommentActions>
+    + person_actions: Option<PersonActions>
+    + creator_community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_is_admin: bool
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "CommunityQuery" {
+    + listing_type: Option<ListingType>
+    + sort: Option<CommunitySortType>
+    + time_range_seconds: Option<i32>
+    + local_user: Option<&'aLocalUser>
+    + show_nsfw: Option<bool>
+    + cursor_data: Option<Community>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "CommunityView" {
+    + community: Community
+    + community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + can_mod: bool
+    + post_tags: TagsView
+}
+
+class "CommunityFollowerView" {
+    + community: Community
+    + follower: Person
+}
+
+class "PendingFollow" {
+    + person: Person
+    + community: Community
+    + is_new_instance: bool
+    + follow_state: Option<CommunityFollowerState>
+}
+
+class "CommunityModeratorView" {
+    + community: Community
+    + moderator: Person
+}
+
+class "CommunityPersonBanView" {
+    + community: Community
+    + person: Person
+}
+
+class "CustomEmojiView" {
+    + custom_emoji: CustomEmoji
+    + keywords: Vec<CustomEmojiKeyword>
+}
+
+class "InboxCombinedQuery" {
+    + type_: Option<InboxDataType>
+    + unread_only: Option<bool>
+    + show_bot_accounts: Option<bool>
+    + cursor_data: Option<InboxCombined>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "InboxCombinedViewInternal" {
+    + inbox_combined: InboxCombined
+    + comment_reply: Option<CommentReply>
+    + person_comment_mention: Option<PersonCommentMention>
+    + person_post_mention: Option<PersonPostMention>
+    + private_message: Option<PrivateMessage>
+    + comment: Option<Comment>
+    + post: Option<Post>
+    + community: Option<Community>
+    + item_creator: Person
+    + item_recipient: Person
+    + image_details: Option<ImageDetails>
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + comment_actions: Option<CommentActions>
+    + item_creator_is_admin: bool
+    + post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "PersonCommentMentionView" {
+    + person_comment_mention: PersonCommentMention
+    + recipient: Person
+    + comment: Comment
+    + creator: Person
+    + post: Post
+    + community: Community
+    + community_actions: Option<CommunityActions>
+    + comment_actions: Option<CommentActions>
+    + person_actions: Option<PersonActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_community_actions: Option<CommunityActions>
+    + creator_is_admin: bool
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "PersonPostMentionView" {
+    + person_post_mention: PersonPostMention
+    + recipient: Person
+    + post: Post
+    + creator: Person
+    + community: Community
+    + image_details: Option<ImageDetails>
+    + community_actions: Option<CommunityActions>
+    + person_actions: Option<PersonActions>
+    + post_actions: Option<PostActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_community_actions: Option<CommunityActions>
+    + post_tags: TagsView
+    + creator_is_admin: bool
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "CommentReplyView" {
+    + comment_reply: CommentReply
+    + recipient: Person
+    + comment: Comment
+    + creator: Person
+    + post: Post
+    + community: Community
+    + community_actions: Option<CommunityActions>
+    + comment_actions: Option<CommentActions>
+    + person_actions: Option<PersonActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_community_actions: Option<CommunityActions>
+    + creator_is_admin: bool
+    + post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "LocalImageView" {
+    + local_image: LocalImage
+    + person: Person
+}
+
+class "LocalUserView" {
+    + local_user: LocalUser
+    + person: Person
+    + instance_actions: Option<InstanceActions>
+}
+
+class "ModlogCombinedQuery" {
+    + type_: Option<ModlogActionType>
+    + listing_type: Option<ListingType>
+    + comment_id: Option<CommentId>
+    + post_id: Option<PostId>
+    + community_id: Option<CommunityId>
+    + hide_modlog_names: Option<bool>
+    + local_user: Option<&'aLocalUser>
+    + mod_person_id: Option<PersonId>
+    + other_person_id: Option<PersonId>
+    + cursor_data: Option<ModlogCombined>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ModAddCommunityView" {
+    + mod_add_community: ModAddCommunity
+    + moderator: Option<Person>
+    + community: Community
+    + other_person: Person
+}
+
+class "ModAddView" {
+    + mod_add: ModAdd
+    + moderator: Option<Person>
+    + other_person: Person
+}
+
+class "ModBanFromCommunityView" {
+    + mod_ban_from_community: ModBanFromCommunity
+    + moderator: Option<Person>
+    + community: Community
+    + other_person: Person
+}
+
+class "ModBanView" {
+    + mod_ban: ModBan
+    + moderator: Option<Person>
+    + other_person: Person
+}
+
+class "ModChangeCommunityVisibilityView" {
+    + mod_change_community_visibility: ModChangeCommunityVisibility
+    + moderator: Option<Person>
+    + community: Community
+}
+
+class "ModLockPostView" {
+    + mod_lock_post: ModLockPost
+    + moderator: Option<Person>
+    + other_person: Person
+    + post: Post
+    + community: Community
+}
+
+class "ModRemoveCommentView" {
+    + mod_remove_comment: ModRemoveComment
+    + moderator: Option<Person>
+    + other_person: Person
+    + comment: Comment
+    + post: Post
+    + community: Community
+}
+
+class "ModRemoveCommunityView" {
+    + mod_remove_community: ModRemoveCommunity
+    + moderator: Option<Person>
+    + community: Community
+}
+
+class "ModRemovePostView" {
+    + mod_remove_post: ModRemovePost
+    + moderator: Option<Person>
+    + other_person: Person
+    + post: Post
+    + community: Community
+}
+
+class "ModFeaturePostView" {
+    + mod_feature_post: ModFeaturePost
+    + moderator: Option<Person>
+    + other_person: Person
+    + post: Post
+    + community: Community
+}
+
+class "ModTransferCommunityView" {
+    + mod_transfer_community: ModTransferCommunity
+    + moderator: Option<Person>
+    + community: Community
+    + other_person: Person
+}
+
+class "AdminPurgeCommentView" {
+    + admin_purge_comment: AdminPurgeComment
+    + admin: Option<Person>
+    + post: Post
+}
+
+class "AdminPurgeCommunityView" {
+    + admin_purge_community: AdminPurgeCommunity
+    + admin: Option<Person>
+}
+
+class "AdminPurgePersonView" {
+    + admin_purge_person: AdminPurgePerson
+    + admin: Option<Person>
+}
+
+class "AdminPurgePostView" {
+    + admin_purge_post: AdminPurgePost
+    + admin: Option<Person>
+    + community: Community
+}
+
+class "AdminBlockInstanceView" {
+    + admin_block_instance: AdminBlockInstance
+    + instance: Instance
+    + admin: Option<Person>
+}
+
+class "AdminAllowInstanceView" {
+    + admin_allow_instance: AdminAllowInstance
+    + instance: Instance
+    + admin: Option<Person>
+}
+
+class "ModlogCombinedViewInternal" {
+    + admin_allow_instance: Option<AdminAllowInstance>
+    + admin_block_instance: Option<AdminBlockInstance>
+    + admin_purge_comment: Option<AdminPurgeComment>
+    + admin_purge_community: Option<AdminPurgeCommunity>
+    + admin_purge_person: Option<AdminPurgePerson>
+    + admin_purge_post: Option<AdminPurgePost>
+    + mod_add: Option<ModAdd>
+    + mod_add_community: Option<ModAddCommunity>
+    + mod_ban: Option<ModBan>
+    + mod_ban_from_community: Option<ModBanFromCommunity>
+    + mod_feature_post: Option<ModFeaturePost>
+    + mod_change_community_visibility: Option<ModChangeCommunityVisibility>
+    + mod_lock_post: Option<ModLockPost>
+    + mod_remove_comment: Option<ModRemoveComment>
+    + mod_remove_community: Option<ModRemoveCommunity>
+    + mod_remove_post: Option<ModRemovePost>
+    + mod_transfer_community: Option<ModTransferCommunity>
+    + moderator: Option<Person>
+    + other_person: Option<Person>
+    + instance: Option<Instance>
+    + community: Option<Community>
+    + post: Option<Post>
+    + comment: Option<Comment>
+}
+
+class "GetModlogResponse" {
+    + modlog: Vec<ModlogCombinedView>
+    + next_page: Option<PaginationCursor>
+    + prev_page: Option<PaginationCursor>
+}
+
+class "PersonQuery" {
+    + admins_only: Option<bool>
+    + banned_only: Option<bool>
+    + cursor_data: Option<Person>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "PersonView" {
+    + person: Person
+    + is_admin: bool
+    + home_instance_actions: Option<InstanceActions>
+    + local_instance_actions: Option<InstanceActions>
+    + creator_banned: bool
+}
+
+class "PersonContentCombinedQuery" {
+    + creator_id: PersonId
+    + type_: Option<PersonContentType>
+    + cursor_data: Option<PersonContentCombined>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "PersonContentCombinedViewInternal" {
+    + person_content_combined: PersonContentCombined
+    + comment: Option<Comment>
+    + post: Post
+    + item_creator: Person
+    + community: Community
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + comment_actions: Option<CommentActions>
+    + image_details: Option<ImageDetails>
+    + item_creator_is_admin: bool
+    + post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "PersonSavedCombinedQuery" {
+    + type_: Option<PersonContentType>
+    + cursor_data: Option<PersonSavedCombined>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "PersonSavedCombinedViewInternal" {
+    + person_saved_combined: PersonSavedCombined
+    + comment: Option<Comment>
+    + post: Post
+    + item_creator: Person
+    + community: Community
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + comment_actions: Option<CommentActions>
+    + image_details: Option<ImageDetails>
+    + item_creator_is_admin: bool
+    + post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "PostQuery" {
+    + listing_type: Option<ListingType>
+    + sort: Option<PostSortType>
+    + time_range_seconds: Option<i32>
+    + community_id: Option<CommunityId>
+    + local_user: Option<&'aLocalUser>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+    + show_hidden: Option<bool>
+    + show_read: Option<bool>
+    + show_nsfw: Option<bool>
+    + hide_media: Option<bool>
+    + no_comments_only: Option<bool>
+    + keyword_blocks: Option<Vec<String>>
+    + cursor_data: Option<Post>
+    + cursor_before_data: Option<Post>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "PostView" {
+    + post: Post
+    + creator: Person
+    + community: Community
+    + image_details: Option<ImageDetails>
+    + community_actions: Option<CommunityActions>
+    + person_actions: Option<PersonActions>
+    + post_actions: Option<PostActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + creator_community_actions: Option<CommunityActions>
+    + creator_is_admin: bool
+    + tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "PrivateMessageView" {
+    + private_message: PrivateMessage
+    + creator: Person
+    + recipient: Person
+}
+
+class "RegistrationApplicationQuery" {
+    + unread_only: Option<bool>
+    + verified_email_only: Option<bool>
+    + cursor_data: Option<RegistrationApplication>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "RegistrationApplicationView" {
+    + registration_application: RegistrationApplication
+    + creator_local_user: LocalUser
+    + creator: Person
+    + admin: Option<Person>
+}
+
+class "PrivateMessageReportView" {
+    + private_message_report: PrivateMessageReport
+    + private_message: PrivateMessage
+    + creator: Person
+    + private_message_creator: Person
+    + resolver: Option<Person>
+}
+
+class "CommentReportView" {
+    + comment_report: CommentReport
+    + comment: Comment
+    + post: Post
+    + community: Community
+    + creator: Person
+    + comment_creator: Person
+    + comment_actions: Option<CommentActions>
+    + resolver: Option<Person>
+    + creator_community_actions: Option<CommunityActions>
+    + person_actions: Option<PersonActions>
+    + community_actions: Option<CommunityActions>
+    + creator_is_admin: bool
+}
+
+class "CommunityReportView" {
+    + community_report: CommunityReport
+    + community: Community
+    + creator: Person
+    + resolver: Option<Person>
+}
+
+class "PostReportView" {
+    + post_report: PostReport
+    + post: Post
+    + community: Community
+    + creator: Person
+    + post_creator: Person
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + resolver: Option<Person>
+    + creator_is_admin: bool
+}
+
+class "ReportCombinedQuery" {
+    + type_: Option<ReportType>
+    + post_id: Option<PostId>
+    + community_id: Option<CommunityId>
+    + unresolved_only: Option<bool>
+    + show_community_rule_violations: Option<bool>
+    + cursor_data: Option<ReportCombined>
+    + my_reports_only: Option<bool>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "ReportCombinedViewInternal" {
+    + report_combined: ReportCombined
+    + post_report: Option<PostReport>
+    + comment_report: Option<CommentReport>
+    + private_message_report: Option<PrivateMessageReport>
+    + community_report: Option<CommunityReport>
+    + report_creator: Person
+    + comment: Option<Comment>
+    + private_message: Option<PrivateMessage>
+    + post: Option<Post>
+    + item_creator: Option<Person>
+    + resolver: Option<Person>
+    + community: Option<Community>
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + comment_actions: Option<CommentActions>
+    + item_creator_is_admin: bool
+}
+
+class "SearchCombinedQuery" {
+    + search_term: Option<String>
+    + community_id: Option<CommunityId>
+    + creator_id: Option<PersonId>
+    + type_: Option<SearchType>
+    + sort: Option<SearchSortType>
+    + time_range_seconds: Option<i32>
+    + listing_type: Option<ListingType>
+    + title_only: Option<bool>
+    + post_url_only: Option<bool>
+    + liked_only: Option<bool>
+    + disliked_only: Option<bool>
+    + cursor_data: Option<SearchCombined>
+    + page_back: Option<bool>
+    + limit: Option<i64>
+}
+
+class "SearchCombinedViewInternal" {
+    + search_combined: SearchCombined
+    + comment: Option<Comment>
+    + post: Option<Post>
+    + item_creator: Option<Person>
+    + community: Option<Community>
+    + creator_community_actions: Option<CommunityActions>
+    + community_actions: Option<CommunityActions>
+    + instance_actions: Option<InstanceActions>
+    + creator_home_instance_actions: Option<InstanceActions>
+    + creator_local_instance_actions: Option<InstanceActions>
+    + post_actions: Option<PostActions>
+    + person_actions: Option<PersonActions>
+    + comment_actions: Option<CommentActions>
+    + image_details: Option<ImageDetails>
+    + item_creator_is_admin: bool
+    + post_tags: TagsView
+    + community_post_tags: TagsView
+    + can_mod: bool
+    + creator_banned: bool
+}
+
+class "SiteView" {
+    + site: Site
+    + local_site: LocalSite
+    + local_site_rate_limit: LocalSiteRateLimit
+    + instance: Instance
+}
+
+class "VoteView" {
+    + creator: Person
+    + item_id: i32
+    + creator_banned_from_community: bool
+    + score: i16
+}
+
+class "DbDataSource" {
+    + pool: ActualDbPool
+}
+
+class "CommunityInboxCollector" {
+    + site_loaded: bool
+    + site: Option<Site>
+    + followed_communities: HashMap<CommunityId,HashSet<Url>>
+    + last_full_communities_fetch: DateTime<Utc>
+    + last_incremental_communities_fetch: DateTime<Utc>
+    + instance_id: InstanceId
+    + domain: String
+    + data_source: T
+}
+
+class "Opts" {
+    + process_count: i32
+    + process_index: i32
+}
+
+class "SendManager" {
+    + opts: Opts
+    + workers: HashMap<InstanceId,CancellableTask>
+    + context: FederationConfig<LemmyContext>
+    + stats_sender: UnboundedSender<FederationQueueStateWithDomain>
+    + exit_print: JoinHandle<()>
+    + federation_worker_config: FederationWorkerConfig
+}
+
+class "Params" {
+    + sort: Option<String>
+    + limit: Option<i64>
+}
+
+class "SendStream" {
+    + rx: tokio::sync::mpsc::Receiver<T>
+}
+
+class "Entry" {
+    + user_id: LocalUserId
+    + key: String
+    + created: InstantSecs
+}
+
+class "IdempotencySet" {
+    + set: Arc<RwLock<HashSet<Entry>>>
+}
+
+class "IdempotencyMiddleware" {
+    + idempotency_set: IdempotencySet
+}
+
+class "IdempotencyService" {
+    + service: S
+    + idempotency_set: IdempotencySet
+}
+
+class "SessionMiddleware" {
+    + context: LemmyContext
+}
+
+class "SessionService" {
+    + service: Rc<S>
+    + context: LemmyContext
+}
+
+class "NodeInfoWellKnown" {
+    + links: Vec<NodeInfoWellKnownLinks>
+}
+
+class "NodeInfoWellKnownLinks" {
+    + rel: Url
+    + href: Url
+}
+
+class "NodeInfo" {
+    + version: Option<String>
+    + software: Option<NodeInfoSoftware>
+    + protocols: Option<Vec<String>>
+    + usage: Option<NodeInfoUsage>
+    + open_registrations: Option<bool>
+    + services: Option<NodeInfoServices>
+    + metadata: Option<HashMap<String,String>>
+}
+
+class "NodeInfoSoftware" {
+    + name: Option<String>
+    + version: Option<String>
+    + repository: Option<String>
+    + homepage: Option<String>
+}
+
+class "NodeInfoUsage" {
+    + users: Option<NodeInfoUsers>
+    + local_posts: Option<i64>
+    + local_comments: Option<i64>
+}
+
+class "NodeInfoUsers" {
+    + total: Option<i64>
+    + active_halfyear: Option<i64>
+    + active_month: Option<i64>
+}
+
+class "NodeInfoServices" {
+    + inbound: Option<Vec<String>>
+    + outbound: Option<Vec<String>>
+}
+
+class "PromContext" {
+    + lemmy: LemmyContext
+    + db_pool_metrics: DbPoolMetrics
+}
+
+class "DbPoolMetrics" {
+    + max_size: Gauge
+    + size: Gauge
+    + available: Gauge
+}
+
+class "Params" {
+    + resource: String
+}
+
+class "RateLimitChecker" {
+    + state: Arc<Mutex<RateLimitState>>
+    + action_type: ActionType
+}
+
+class "RateLimitCell" {
+    + state: Arc<Mutex<RateLimitState>>
+}
+
+class "RateLimitedMiddleware" {
+    + checker: RateLimitChecker
+    + service: Rc<S>
+}
+
+class "InstantSecs" {
+    + secs: u32
+}
+
+class "Bucket" {
+    + last_checked: InstantSecs
+    + tokens: u32
+}
+
+class "BucketConfig" {
+    + capacity: u32
+    + secs_to_refill: u32
+}
+
+class "RateLimitedGroup" {
+    + total: EnumMap<ActionType,Bucket>
+    + children: C
+}
+
+class "RateLimitState" {
+    + ipv4_buckets: Map<Ipv4Addr,()>
+    + ipv6_buckets: Map<[u8;6],Map<u8,Map<u8,()>>>
+    + bucket_configs: EnumMap<ActionType,BucketConfig>
+}
+
+class "Settings" {
+    + database: DatabaseConfig
+    + pictrs: Option<PictrsConfig>
+    + email: Option<EmailConfig>
+    + setup: Option<SetupConfig>
+    + hostname: String
+    + bind: IpAddr
+    + port: u16
+    + tls_enabled: bool
+    + opentelemetry_url: Option<Url>
+    + federation: FederationWorkerConfig
+    + prometheus: Option<PrometheusConfig>
+    + cors_origin: Vec<String>
+    + json_logging: bool
+}
+
+class "PictrsConfig" {
+    + url: Url
+    + api_key: Option<String>
+    + image_mode: PictrsImageMode
+    + proxy_bypass_domains: Vec<String>
+    + upload_timeout: u64
+    + max_thumbnail_size: u32
+    + max_avatar_size: u32
+    + max_banner_size: u32
+    + max_upload_size: Option<u32>
+    + allow_video_uploads: bool
+    + image_upload_disabled: bool
+}
+
+class "DatabaseConfig" {
+    + connection: String
+    + pool_size: usize
+}
+
+class "EmailConfig" {
+    + connection: String
+    + smtp_from_address: String
+}
+
+class "SetupConfig" {
+    + admin_username: String
+    + admin_password: String
+    + site_name: String
+    + admin_email: Option<String>
+}
+
+class "PrometheusConfig" {
+    + bind: IpAddr
+    + port: i32
+}
+
+class "FederationWorkerConfig" {
+    + concurrent_sends_per_instance: i8
+}
+
+class "NoopLinkFormatter" {
+}
+
+class "Link" {
+    + url: String
+    + title: Option<String>
+}
+
+class "MentionData" {
+    + name: String
+    + domain: String
+}
+
+
+"CreateComment" <-- "PostId"
+"Option<CommentId>" <-- "CommentId"
+"CreateComment" <-- "Option<CommentId>"
+"Option<LanguageId>" <-- "LanguageId"
+"CreateComment" <-- "Option<LanguageId>"
+
+
+"GetComment" <-- "CommentId"
+
+
+"EditComment" <-- "CommentId"
+"Option<LanguageId>" <-- "LanguageId"
+"EditComment" <-- "Option<LanguageId>"
+
+
+"DistinguishComment" <-- "CommentId"
+
+
+"DeleteComment" <-- "CommentId"
+
+
+"RemoveComment" <-- "CommentId"
+
+
+"SaveComment" <-- "CommentId"
+
+
+"CommentResponse" <-- "CommentView"
+"Vec<LocalUserId>" <-- "LocalUserId"
+"CommentResponse" <-- "Vec<LocalUserId>"
+
+
+"CreateCommentLike" <-- "CommentId"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetComments" <-- "Option<PaginationCursor>"
+"Option<CommunityId>" <-- "CommunityId"
+"GetComments" <-- "Option<CommunityId>"
+"Option<PostId>" <-- "PostId"
+"GetComments" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"GetComments" <-- "Option<CommentId>"
+
+
+"Vec<CommentView>" <-- "CommentView"
+"GetCommentsResponse" <-- "Vec<CommentView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetCommentsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetCommentsResponse" <-- "Option<PaginationCursor>"
+
+
+"Vec<CommentSlimView>" <-- "CommentSlimView"
+"GetCommentsSlimResponse" <-- "Vec<CommentSlimView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetCommentsSlimResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetCommentsSlimResponse" <-- "Option<PaginationCursor>"
+
+
+"ListCommentLikes" <-- "CommentId"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommentLikes" <-- "Option<PaginationCursor>"
+
+
+"Vec<VoteView>" <-- "VoteView"
+"ListCommentLikesResponse" <-- "Vec<VoteView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommentLikesResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommentLikesResponse" <-- "Option<PaginationCursor>"
+
+
+"CreateCommunityTag" <-- "CommunityId"
+
+
+"UpdateCommunityTag" <-- "TagId"
+
+
+"DeleteCommunityTag" <-- "TagId"
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"GetCommunity" <-- "Option<CommunityId>"
+
+
+"GetCommunityResponse" <-- "CommunityView"
+"Option<Site>" <-- "Site"
+"GetCommunityResponse" <-- "Option<Site>"
+"Vec<CommunityModeratorView>" <-- "CommunityModeratorView"
+"GetCommunityResponse" <-- "Vec<CommunityModeratorView>"
+"Vec<LanguageId>" <-- "LanguageId"
+"GetCommunityResponse" <-- "Vec<LanguageId>"
+
+
+"Option<Vec<LanguageId>>" <-- "LanguageId"
+"CreateCommunity" <-- "Option<Vec<LanguageId>>"
+
+
+"CommunityResponse" <-- "CommunityView"
+"Vec<LanguageId>" <-- "LanguageId"
+"CommunityResponse" <-- "Vec<LanguageId>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunities" <-- "Option<PaginationCursor>"
+
+
+"Vec<CommunityView>" <-- "CommunityView"
+"ListCommunitiesResponse" <-- "Vec<CommunityView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunitiesResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunitiesResponse" <-- "Option<PaginationCursor>"
+
+
+"BanFromCommunity" <-- "CommunityId"
+"BanFromCommunity" <-- "PersonId"
+
+
+"BanFromCommunityResponse" <-- "PersonView"
+
+
+"AddModToCommunity" <-- "CommunityId"
+"AddModToCommunity" <-- "PersonId"
+
+
+"Vec<CommunityModeratorView>" <-- "CommunityModeratorView"
+"AddModToCommunityResponse" <-- "Vec<CommunityModeratorView>"
+
+
+"EditCommunity" <-- "CommunityId"
+"Option<Vec<LanguageId>>" <-- "LanguageId"
+"EditCommunity" <-- "Option<Vec<LanguageId>>"
+
+
+"HideCommunity" <-- "CommunityId"
+
+
+"DeleteCommunity" <-- "CommunityId"
+
+
+"RemoveCommunity" <-- "CommunityId"
+
+
+"FollowCommunity" <-- "CommunityId"
+
+
+"BlockCommunity" <-- "CommunityId"
+
+
+"BlockCommunityResponse" <-- "CommunityView"
+
+
+"TransferCommunity" <-- "CommunityId"
+"TransferCommunity" <-- "PersonId"
+
+
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunityPendingFollows" <-- "Option<PaginationCursor>"
+
+
+"GetCommunityPendingFollowsCount" <-- "CommunityId"
+
+
+
+
+"Vec<PendingFollow>" <-- "PendingFollow"
+"ListCommunityPendingFollowsResponse" <-- "Vec<PendingFollow>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunityPendingFollowsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListCommunityPendingFollowsResponse" <-- "Option<PaginationCursor>"
+
+
+"ApproveCommunityPendingFollower" <-- "CommunityId"
+"ApproveCommunityPendingFollower" <-- "PersonId"
+
+
+"Arc<Secret>" <-- "Secret"
+"LemmyContext" <-- "Arc<Secret>"
+"LemmyContext" <-- "RateLimitCell"
+
+
+
+
+"EditCustomEmoji" <-- "CustomEmojiId"
+
+
+"DeleteCustomEmoji" <-- "CustomEmojiId"
+
+
+"CustomEmojiResponse" <-- "CustomEmojiView"
+
+
+"Vec<CustomEmojiView>" <-- "CustomEmojiView"
+"ListCustomEmojisResponse" <-- "Vec<CustomEmojiView>"
+
+
+
+
+
+
+
+
+
+
+
+
+"CommunityIdQuery" <-- "CommunityId"
+
+
+
+
+
+
+"EditOAuthProvider" <-- "OAuthProviderId"
+
+
+"DeleteOAuthProvider" <-- "OAuthProviderId"
+
+
+"AuthenticateWithOauth" <-- "OAuthProviderId"
+
+
+"Login" <-- "SensitiveString"
+"Login" <-- "SensitiveString"
+
+
+"Register" <-- "SensitiveString"
+"Register" <-- "SensitiveString"
+"Option<SensitiveString>" <-- "SensitiveString"
+"Register" <-- "Option<SensitiveString>"
+
+
+"Option<CaptchaResponse>" <-- "CaptchaResponse"
+"GetCaptchaResponse" <-- "Option<CaptchaResponse>"
+
+
+
+
+"Option<SensitiveString>" <-- "SensitiveString"
+"SaveUserSettings" <-- "Option<SensitiveString>"
+"Option<Vec<LanguageId>>" <-- "LanguageId"
+"SaveUserSettings" <-- "Option<Vec<LanguageId>>"
+
+
+"ChangePassword" <-- "SensitiveString"
+"ChangePassword" <-- "SensitiveString"
+"ChangePassword" <-- "SensitiveString"
+
+
+"Option<SensitiveString>" <-- "SensitiveString"
+"LoginResponse" <-- "Option<SensitiveString>"
+
+
+"Option<PersonId>" <-- "PersonId"
+"GetPersonDetails" <-- "Option<PersonId>"
+
+
+"GetPersonDetailsResponse" <-- "PersonView"
+"Option<Site>" <-- "Site"
+"GetPersonDetailsResponse" <-- "Option<Site>"
+"Vec<CommunityModeratorView>" <-- "CommunityModeratorView"
+"GetPersonDetailsResponse" <-- "Vec<CommunityModeratorView>"
+
+
+"Option<PersonId>" <-- "PersonId"
+"ListPersonContent" <-- "Option<PersonId>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonContent" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonContentResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonContentResponse" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonSaved" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonSavedResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonSavedResponse" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonRead" <-- "Option<PaginationCursor>"
+
+
+"Vec<PostView>" <-- "PostView"
+"ListPersonReadResponse" <-- "Vec<PostView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonReadResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonReadResponse" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonHidden" <-- "Option<PaginationCursor>"
+
+
+"Vec<PostView>" <-- "PostView"
+"ListPersonHiddenResponse" <-- "Vec<PostView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonHiddenResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPersonHiddenResponse" <-- "Option<PaginationCursor>"
+
+
+"AddAdmin" <-- "PersonId"
+
+
+"Vec<PersonView>" <-- "PersonView"
+"AddAdminResponse" <-- "Vec<PersonView>"
+
+
+"BanPerson" <-- "PersonId"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListBannedPersons" <-- "Option<PaginationCursor>"
+
+
+"Vec<PersonView>" <-- "PersonView"
+"BannedPersonsResponse" <-- "Vec<PersonView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"BannedPersonsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"BannedPersonsResponse" <-- "Option<PaginationCursor>"
+
+
+"BanPersonResponse" <-- "PersonView"
+
+
+"BlockPerson" <-- "PersonId"
+
+
+"BlockPersonResponse" <-- "PersonView"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListInbox" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListInboxResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListInboxResponse" <-- "Option<PaginationCursor>"
+
+
+"MarkPersonCommentMentionAsRead" <-- "PersonCommentMentionId"
+
+
+"MarkPersonPostMentionAsRead" <-- "PersonPostMentionId"
+
+
+"MarkCommentReplyAsRead" <-- "CommentReplyId"
+
+
+"DeleteAccount" <-- "SensitiveString"
+
+
+"PasswordReset" <-- "SensitiveString"
+
+
+"PasswordChangeAfterReset" <-- "SensitiveString"
+"PasswordChangeAfterReset" <-- "SensitiveString"
+"PasswordChangeAfterReset" <-- "SensitiveString"
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"GetReportCount" <-- "Option<CommunityId>"
+
+
+
+
+
+
+
+
+"GenerateTotpSecretResponse" <-- "SensitiveString"
+
+
+
+
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListMedia" <-- "Option<PaginationCursor>"
+
+
+"Vec<LocalImageView>" <-- "LocalImageView"
+"ListMediaResponse" <-- "Vec<LocalImageView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListMediaResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListMediaResponse" <-- "Option<PaginationCursor>"
+
+
+"Vec<LoginToken>" <-- "LoginToken"
+"ListLoginsResponse" <-- "Vec<LoginToken>"
+
+
+"ResendVerificationEmail" <-- "SensitiveString"
+
+
+
+
+"LemmyPlugin" <-- "PluginMetadata"
+
+
+"CreatePost" <-- "CommunityId"
+"Option<LanguageId>" <-- "LanguageId"
+"CreatePost" <-- "Option<LanguageId>"
+"Option<Vec<TagId>>" <-- "TagId"
+"CreatePost" <-- "Option<Vec<TagId>>"
+
+
+"PostResponse" <-- "PostView"
+
+
+"Option<PostId>" <-- "PostId"
+"GetPost" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"GetPost" <-- "Option<CommentId>"
+
+
+"GetPostResponse" <-- "PostView"
+"GetPostResponse" <-- "CommunityView"
+"Vec<PostView>" <-- "PostView"
+"GetPostResponse" <-- "Vec<PostView>"
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"GetPosts" <-- "Option<CommunityId>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetPosts" <-- "Option<PaginationCursor>"
+
+
+"Vec<PostView>" <-- "PostView"
+"GetPostsResponse" <-- "Vec<PostView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetPostsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetPostsResponse" <-- "Option<PaginationCursor>"
+
+
+"CreatePostLike" <-- "PostId"
+
+
+"EditPost" <-- "PostId"
+"Option<LanguageId>" <-- "LanguageId"
+"EditPost" <-- "Option<LanguageId>"
+"Option<Vec<TagId>>" <-- "TagId"
+"EditPost" <-- "Option<Vec<TagId>>"
+
+
+"DeletePost" <-- "PostId"
+
+
+"RemovePost" <-- "PostId"
+
+
+"MarkPostAsRead" <-- "PostId"
+
+
+"Vec<PostId>" <-- "PostId"
+"MarkManyPostsAsRead" <-- "Vec<PostId>"
+
+
+"HidePost" <-- "PostId"
+
+
+"LockPost" <-- "PostId"
+
+
+"FeaturePost" <-- "PostId"
+
+
+"SavePost" <-- "PostId"
+
+
+
+
+"GetSiteMetadataResponse" <-- "LinkMetadata"
+
+
+"LinkMetadata" <-- "OpenGraphData"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"OpenGraphData" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"OpenGraphData" <-- "Option<DbUrl>"
+
+
+"ListPostLikes" <-- "PostId"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPostLikes" <-- "Option<PaginationCursor>"
+
+
+"Vec<VoteView>" <-- "VoteView"
+"ListPostLikesResponse" <-- "Vec<VoteView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPostLikesResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListPostLikesResponse" <-- "Option<PaginationCursor>"
+
+
+"CreatePrivateMessage" <-- "PersonId"
+
+
+"EditPrivateMessage" <-- "PrivateMessageId"
+
+
+"DeletePrivateMessage" <-- "PrivateMessageId"
+
+
+"MarkPrivateMessageAsRead" <-- "PrivateMessageId"
+
+
+"PrivateMessageResponse" <-- "PrivateMessageView"
+
+
+"Option<PostId>" <-- "PostId"
+"ListReports" <-- "Option<PostId>"
+"Option<CommunityId>" <-- "CommunityId"
+"ListReports" <-- "Option<CommunityId>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListReports" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListReportsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListReportsResponse" <-- "Option<PaginationCursor>"
+
+
+"CreateCommentReport" <-- "CommentId"
+
+
+"CommentReportResponse" <-- "CommentReportView"
+
+
+"ResolveCommentReport" <-- "CommentReportId"
+
+
+"CreateCommunityReport" <-- "CommunityId"
+
+
+"CommunityReportResponse" <-- "CommunityReportView"
+
+
+"ResolveCommunityReport" <-- "CommunityReportId"
+
+
+"CreatePostReport" <-- "PostId"
+
+
+"PostReportResponse" <-- "PostReportView"
+
+
+"ResolvePostReport" <-- "PostReportId"
+
+
+"CreatePrivateMessageReport" <-- "PrivateMessageId"
+
+
+"PrivateMessageReportResponse" <-- "PrivateMessageReportView"
+
+
+"ResolvePrivateMessageReport" <-- "PrivateMessageReportId"
+
+
+"Vec<PictrsFile>" <-- "PictrsFile"
+"PictrsResponse" <-- "Vec<PictrsFile>"
+
+
+"PictrsFile" <-- "PictrsFileDetails"
+
+
+
+
+
+
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"Search" <-- "Option<CommunityId>"
+"Option<PersonId>" <-- "PersonId"
+"Search" <-- "Option<PersonId>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"Search" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"SearchResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"SearchResponse" <-- "Option<PaginationCursor>"
+
+
+
+
+"Option<CommentView>" <-- "CommentView"
+"ResolveObjectResponse" <-- "Option<CommentView>"
+"Option<PostView>" <-- "PostView"
+"ResolveObjectResponse" <-- "Option<PostView>"
+"Option<CommunityView>" <-- "CommunityView"
+"ResolveObjectResponse" <-- "Option<CommunityView>"
+"Option<PersonView>" <-- "PersonView"
+"ResolveObjectResponse" <-- "Option<PersonView>"
+
+
+"Option<PersonId>" <-- "PersonId"
+"GetModlog" <-- "Option<PersonId>"
+"Option<CommunityId>" <-- "CommunityId"
+"GetModlog" <-- "Option<CommunityId>"
+"Option<PersonId>" <-- "PersonId"
+"GetModlog" <-- "Option<PersonId>"
+"Option<PostId>" <-- "PostId"
+"GetModlog" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"GetModlog" <-- "Option<CommentId>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetModlog" <-- "Option<PaginationCursor>"
+
+
+"Option<Vec<LanguageId>>" <-- "LanguageId"
+"CreateSite" <-- "Option<Vec<LanguageId>>"
+
+
+"Option<Vec<LanguageId>>" <-- "LanguageId"
+"EditSite" <-- "Option<Vec<LanguageId>>"
+
+
+"SiteResponse" <-- "SiteView"
+
+
+"GetSiteResponse" <-- "SiteView"
+"Vec<PersonView>" <-- "PersonView"
+"GetSiteResponse" <-- "Vec<PersonView>"
+"Option<MyUserInfo>" <-- "MyUserInfo"
+"GetSiteResponse" <-- "Option<MyUserInfo>"
+"Vec<Language>" <-- "Language"
+"GetSiteResponse" <-- "Vec<Language>"
+"Vec<LanguageId>" <-- "LanguageId"
+"GetSiteResponse" <-- "Vec<LanguageId>"
+"Option<Tagline>" <-- "Tagline"
+"GetSiteResponse" <-- "Option<Tagline>"
+"Vec<PublicOAuthProvider>" <-- "PublicOAuthProvider"
+"GetSiteResponse" <-- "Vec<PublicOAuthProvider>"
+"Vec<OAuthProvider>" <-- "OAuthProvider"
+"GetSiteResponse" <-- "Vec<OAuthProvider>"
+"Vec<LocalSiteUrlBlocklist>" <-- "LocalSiteUrlBlocklist"
+"GetSiteResponse" <-- "Vec<LocalSiteUrlBlocklist>"
+"Vec<PluginMetadata>" <-- "PluginMetadata"
+"GetSiteResponse" <-- "Vec<PluginMetadata>"
+
+
+"Option<FederatedInstances>" <-- "FederatedInstances"
+"GetFederatedInstancesResponse" <-- "Option<FederatedInstances>"
+
+
+"MyUserInfo" <-- "LocalUserView"
+"Vec<CommunityFollowerView>" <-- "CommunityFollowerView"
+"MyUserInfo" <-- "Vec<CommunityFollowerView>"
+"Vec<CommunityModeratorView>" <-- "CommunityModeratorView"
+"MyUserInfo" <-- "Vec<CommunityModeratorView>"
+"Vec<Community>" <-- "Community"
+"MyUserInfo" <-- "Vec<Community>"
+"Vec<Instance>" <-- "Instance"
+"MyUserInfo" <-- "Vec<Instance>"
+"Vec<Person>" <-- "Person"
+"MyUserInfo" <-- "Vec<Person>"
+"Vec<LanguageId>" <-- "LanguageId"
+"MyUserInfo" <-- "Vec<LanguageId>"
+
+
+"Vec<InstanceWithFederationState>" <-- "InstanceWithFederationState"
+"FederatedInstances" <-- "Vec<InstanceWithFederationState>"
+"Vec<InstanceWithFederationState>" <-- "InstanceWithFederationState"
+"FederatedInstances" <-- "Vec<InstanceWithFederationState>"
+"Vec<InstanceWithFederationState>" <-- "InstanceWithFederationState"
+"FederatedInstances" <-- "Vec<InstanceWithFederationState>"
+
+
+"ReadableFederationState" <-- "FederationQueueState"
+
+
+"InstanceWithFederationState" <-- "Instance"
+"Option<ReadableFederationState>" <-- "ReadableFederationState"
+"InstanceWithFederationState" <-- "Option<ReadableFederationState>"
+
+
+"PurgePerson" <-- "PersonId"
+
+
+"PurgeCommunity" <-- "CommunityId"
+
+
+"PurgePost" <-- "PostId"
+
+
+"PurgeComment" <-- "CommentId"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListRegistrationApplications" <-- "Option<PaginationCursor>"
+
+
+"Vec<RegistrationApplicationView>" <-- "RegistrationApplicationView"
+"ListRegistrationApplicationsResponse" <-- "Vec<RegistrationApplicationView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListRegistrationApplicationsResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListRegistrationApplicationsResponse" <-- "Option<PaginationCursor>"
+
+
+"GetRegistrationApplication" <-- "PersonId"
+
+
+"ApproveRegistrationApplication" <-- "RegistrationApplicationId"
+
+
+"RegistrationApplicationResponse" <-- "RegistrationApplicationView"
+
+
+
+
+"UserBlockInstanceParams" <-- "InstanceId"
+
+
+
+
+
+
+
+
+
+
+"UpdateTagline" <-- "TaglineId"
+
+
+"DeleteTagline" <-- "TaglineId"
+
+
+"TaglineResponse" <-- "Tagline"
+
+
+"Vec<Tagline>" <-- "Tagline"
+"ListTaglinesResponse" <-- "Vec<Tagline>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListTaglinesResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListTaglinesResponse" <-- "Option<PaginationCursor>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"ListTaglines" <-- "Option<PaginationCursor>"
+
+
+
+
+"Vec<CommentView>" <-- "CommentView"
+"CommentsCommonOutput" <-- "Vec<CommentView>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"CommentsCommonOutput" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"CommentsCommonOutput" <-- "Option<PaginationCursor>"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"UserSettingsBackup" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"UserSettingsBackup" <-- "Option<DbUrl>"
+"Option<LocalUser>" <-- "LocalUser"
+"UserSettingsBackup" <-- "Option<LocalUser>"
+"Vec<ObjectId<ApubCommunity>>" <-- "ApubCommunity"
+"UserSettingsBackup" <-- "Vec<ObjectId<ApubCommunity>>"
+"Vec<ObjectId<ApubPost>>" <-- "ApubPost"
+"UserSettingsBackup" <-- "Vec<ObjectId<ApubPost>>"
+"Vec<ObjectId<ApubComment>>" <-- "ApubComment"
+"UserSettingsBackup" <-- "Vec<ObjectId<ApubComment>>"
+"Vec<ObjectId<ApubCommunity>>" <-- "ApubCommunity"
+"UserSettingsBackup" <-- "Vec<ObjectId<ApubCommunity>>"
+"Vec<ObjectId<ApubPerson>>" <-- "ApubPerson"
+"UserSettingsBackup" <-- "Vec<ObjectId<ApubPerson>>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Option<LocalSite>" <-- "LocalSite"
+"LocalSiteData" <-- "Option<LocalSite>"
+"Vec<Instance>" <-- "Instance"
+"LocalSiteData" <-- "Vec<Instance>"
+"Vec<Instance>" <-- "Instance"
+"LocalSiteData" <-- "Vec<Instance>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"BlockUser" <-- "ObjectId<ApubPerson>"
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"BlockUser" <-- "ObjectId<ApubPerson>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UndoBlockUser" <-- "ObjectId<ApubPerson>"
+"UndoBlockUser" <-- "BlockUser"
+
+
+"ObjectId<ApubCommunity>" <-- "ApubCommunity"
+"AnnounceActivity" <-- "ObjectId<ApubCommunity>"
+"IdOrNestedObject<RawAnnouncableActivities>" <-- "RawAnnouncableActivities"
+"AnnounceActivity" <-- "IdOrNestedObject<RawAnnouncableActivities>"
+
+
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"CollectionAdd" <-- "ObjectId<ApubPerson>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"CollectionRemove" <-- "ObjectId<ApubPerson>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"LockPage" <-- "ObjectId<ApubPerson>"
+"ObjectId<ApubPost>" <-- "ApubPost"
+"LockPage" <-- "ObjectId<ApubPost>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UndoLockPage" <-- "ObjectId<ApubPerson>"
+"UndoLockPage" <-- "LockPage"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Report" <-- "ObjectId<ApubPerson>"
+"[ObjectId<ApubCommunity>;1]" <-- "ApubCommunity"
+"Report" <-- "[ObjectId<ApubCommunity>;1]"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"ResolveReport" <-- "ObjectId<ApubPerson>"
+"[ObjectId<ApubCommunity>;1]" <-- "ApubCommunity"
+"ResolveReport" <-- "[ObjectId<ApubCommunity>;1]"
+"ResolveReport" <-- "Report"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UpdateCommunity" <-- "ObjectId<ApubPerson>"
+"Box<Group>" <-- "Group"
+"UpdateCommunity" <-- "Box<Group>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"CreateOrUpdateNote" <-- "ObjectId<ApubPerson>"
+"CreateOrUpdateNote" <-- "Note"
+
+
+"CreateOrUpdateNoteWrapper" <-- "NoteWrapper"
+
+
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"CreateOrUpdatePage" <-- "ObjectId<ApubPerson>"
+"CreateOrUpdatePage" <-- "Page"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"CreateOrUpdatePrivateMessage" <-- "ObjectId<ApubPerson>"
+"[ObjectId<ApubPerson>;1]" <-- "ApubPerson"
+"CreateOrUpdatePrivateMessage" <-- "[ObjectId<ApubPerson>;1]"
+"CreateOrUpdatePrivateMessage" <-- "PrivateMessage"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Delete" <-- "ObjectId<ApubPerson>"
+"IdOrNestedObject<Tombstone>" <-- "Tombstone"
+"Delete" <-- "IdOrNestedObject<Tombstone>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"DeleteUser" <-- "ObjectId<ApubPerson>"
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"DeleteUser" <-- "ObjectId<ApubPerson>"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UndoDelete" <-- "ObjectId<ApubPerson>"
+"UndoDelete" <-- "Delete"
+
+
+"ObjectId<ApubCommunity>" <-- "ApubCommunity"
+"AcceptFollow" <-- "ObjectId<ApubCommunity>"
+"Option<[ObjectId<ApubPerson>;1]>" <-- "ApubPerson"
+"AcceptFollow" <-- "Option<[ObjectId<ApubPerson>;1]>"
+"AcceptFollow" <-- "Follow"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Follow" <-- "ObjectId<ApubPerson>"
+
+
+"ObjectId<ApubCommunity>" <-- "ApubCommunity"
+"RejectFollow" <-- "ObjectId<ApubCommunity>"
+"Option<[ObjectId<ApubPerson>;1]>" <-- "ApubPerson"
+"RejectFollow" <-- "Option<[ObjectId<ApubPerson>;1]>"
+"RejectFollow" <-- "Follow"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UndoFollow" <-- "ObjectId<ApubPerson>"
+"Option<[ObjectId<ApubPerson>;1]>" <-- "ApubPerson"
+"UndoFollow" <-- "Option<[ObjectId<ApubPerson>;1]>"
+"UndoFollow" <-- "Follow"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"UndoVote" <-- "ObjectId<ApubPerson>"
+"UndoVote" <-- "Vote"
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Vote" <-- "ObjectId<ApubPerson>"
+
+
+
+
+"Vec<Page>" <-- "Page"
+"GroupFeatured" <-- "Vec<Page>"
+
+
+
+
+"Vec<ObjectId<ApubPerson>>" <-- "ApubPerson"
+"GroupModerators" <-- "Vec<ObjectId<ApubPerson>>"
+
+
+"Vec<AnnounceActivity>" <-- "AnnounceActivity"
+"GroupOutbox" <-- "Vec<AnnounceActivity>"
+
+
+
+
+
+
+
+
+"ObjectId<ApubCommunity>" <-- "ApubCommunity"
+"Group" <-- "ObjectId<ApubCommunity>"
+"Option<CollectionId<ApubCommunityFollower>>" <-- "ApubCommunityFollower"
+"Group" <-- "Option<CollectionId<ApubCommunityFollower>>"
+"Option<Source>" <-- "Source"
+"Group" <-- "Option<Source>"
+"Option<ImageObject>" <-- "ImageObject"
+"Group" <-- "Option<ImageObject>"
+"Option<ImageObject>" <-- "ImageObject"
+"Group" <-- "Option<ImageObject>"
+"CollectionId<ApubCommunityOutbox>" <-- "ApubCommunityOutbox"
+"Group" <-- "CollectionId<ApubCommunityOutbox>"
+"Option<Endpoints>" <-- "Endpoints"
+"Group" <-- "Option<Endpoints>"
+"Option<CollectionId<ApubCommunityFeatured>>" <-- "ApubCommunityFeatured"
+"Group" <-- "Option<CollectionId<ApubCommunityFeatured>>"
+"Vec<LanguageTag>" <-- "LanguageTag"
+"Group" <-- "Vec<LanguageTag>"
+
+
+"ObjectId<ApubSite>" <-- "ApubSite"
+"Instance" <-- "ObjectId<ApubSite>"
+"Option<Source>" <-- "Source"
+"Instance" <-- "Option<Source>"
+"Option<ImageObject>" <-- "ImageObject"
+"Instance" <-- "Option<ImageObject>"
+"Option<ImageObject>" <-- "ImageObject"
+"Instance" <-- "Option<ImageObject>"
+"Vec<LanguageTag>" <-- "LanguageTag"
+"Instance" <-- "Vec<LanguageTag>"
+
+
+
+
+
+
+
+
+
+
+"ObjectId<ApubComment>" <-- "ApubComment"
+"Note" <-- "ObjectId<ApubComment>"
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Note" <-- "ObjectId<ApubPerson>"
+"Option<Source>" <-- "Source"
+"Note" <-- "Option<Source>"
+"Option<LanguageTag>" <-- "LanguageTag"
+"Note" <-- "Option<LanguageTag>"
+
+
+"ObjectId<ApubPost>" <-- "ApubPost"
+"Page" <-- "ObjectId<ApubPost>"
+"Option<Source>" <-- "Source"
+"Page" <-- "Option<Source>"
+"Option<ImageObject>" <-- "ImageObject"
+"Page" <-- "Option<ImageObject>"
+"Option<LanguageTag>" <-- "LanguageTag"
+"Page" <-- "Option<LanguageTag>"
+"Vec<Hashtag>" <-- "Hashtag"
+"Page" <-- "Vec<Hashtag>"
+
+
+
+
+
+
+
+
+
+
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"Person" <-- "ObjectId<ApubPerson>"
+"Option<Source>" <-- "Source"
+"Person" <-- "Option<Source>"
+"Option<ImageObject>" <-- "ImageObject"
+"Person" <-- "Option<ImageObject>"
+"Option<ImageObject>" <-- "ImageObject"
+"Person" <-- "Option<ImageObject>"
+"Option<Endpoints>" <-- "Endpoints"
+"Person" <-- "Option<Endpoints>"
+
+
+"ObjectId<ApubPrivateMessage>" <-- "ApubPrivateMessage"
+"PrivateMessage" <-- "ObjectId<ApubPrivateMessage>"
+"ObjectId<ApubPerson>" <-- "ApubPerson"
+"PrivateMessage" <-- "ObjectId<ApubPerson>"
+"[ObjectId<ApubPerson>;1]" <-- "ApubPerson"
+"PrivateMessage" <-- "[ObjectId<ApubPerson>;1]"
+"Option<Source>" <-- "Source"
+"PrivateMessage" <-- "Option<Source>"
+
+
+
+
+
+
+
+
+
+
+"Vec<DbUrl>" <-- "DbUrl"
+"UserBackupLists" <-- "Vec<DbUrl>"
+"Vec<DbUrl>" <-- "DbUrl"
+"UserBackupLists" <-- "Vec<DbUrl>"
+"Vec<DbUrl>" <-- "DbUrl"
+"UserBackupLists" <-- "Vec<DbUrl>"
+"Vec<DbUrl>" <-- "DbUrl"
+"UserBackupLists" <-- "Vec<DbUrl>"
+"Vec<DbUrl>" <-- "DbUrl"
+"UserBackupLists" <-- "Vec<DbUrl>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"ActivitySendTargets" <-- "Option<CommunityId>"
+
+
+"SentActivity" <-- "ActivityId"
+"SentActivity" <-- "DbUrl"
+"Vec<Option<DbUrl>>" <-- "DbUrl"
+"SentActivity" <-- "Vec<Option<DbUrl>>"
+"Option<CommunityId>" <-- "CommunityId"
+"SentActivity" <-- "Option<CommunityId>"
+"Option<DbUrl>" <-- "DbUrl"
+"SentActivity" <-- "Option<DbUrl>"
+
+
+"SentActivityForm" <-- "DbUrl"
+"Vec<Option<DbUrl>>" <-- "DbUrl"
+"SentActivityForm" <-- "Vec<Option<DbUrl>>"
+"SentActivityForm" <-- "DbUrl"
+
+
+"ReceivedActivity" <-- "DbUrl"
+
+
+"LocalUserLanguage" <-- "LocalUserId"
+"LocalUserLanguage" <-- "LanguageId"
+
+
+"LocalUserLanguageForm" <-- "LocalUserId"
+"LocalUserLanguageForm" <-- "LanguageId"
+
+
+"CommunityLanguage" <-- "CommunityId"
+"CommunityLanguage" <-- "LanguageId"
+
+
+"CommunityLanguageForm" <-- "CommunityId"
+"CommunityLanguageForm" <-- "LanguageId"
+
+
+"SiteLanguage" <-- "SiteId"
+"SiteLanguage" <-- "LanguageId"
+
+
+"SiteLanguageForm" <-- "SiteId"
+"SiteLanguageForm" <-- "LanguageId"
+
+
+
+
+
+
+
+
+"InboxCombined" <-- "InboxCombinedId"
+"Option<CommentReplyId>" <-- "CommentReplyId"
+"InboxCombined" <-- "Option<CommentReplyId>"
+"Option<PersonCommentMentionId>" <-- "PersonCommentMentionId"
+"InboxCombined" <-- "Option<PersonCommentMentionId>"
+"Option<PersonPostMentionId>" <-- "PersonPostMentionId"
+"InboxCombined" <-- "Option<PersonPostMentionId>"
+"Option<PrivateMessageId>" <-- "PrivateMessageId"
+"InboxCombined" <-- "Option<PrivateMessageId>"
+
+
+"ModlogCombined" <-- "ModlogCombinedId"
+"Option<AdminAllowInstanceId>" <-- "AdminAllowInstanceId"
+"ModlogCombined" <-- "Option<AdminAllowInstanceId>"
+"Option<AdminBlockInstanceId>" <-- "AdminBlockInstanceId"
+"ModlogCombined" <-- "Option<AdminBlockInstanceId>"
+"Option<AdminPurgeCommentId>" <-- "AdminPurgeCommentId"
+"ModlogCombined" <-- "Option<AdminPurgeCommentId>"
+"Option<AdminPurgeCommunityId>" <-- "AdminPurgeCommunityId"
+"ModlogCombined" <-- "Option<AdminPurgeCommunityId>"
+"Option<AdminPurgePersonId>" <-- "AdminPurgePersonId"
+"ModlogCombined" <-- "Option<AdminPurgePersonId>"
+"Option<AdminPurgePostId>" <-- "AdminPurgePostId"
+"ModlogCombined" <-- "Option<AdminPurgePostId>"
+"Option<ModAddId>" <-- "ModAddId"
+"ModlogCombined" <-- "Option<ModAddId>"
+"Option<ModAddCommunityId>" <-- "ModAddCommunityId"
+"ModlogCombined" <-- "Option<ModAddCommunityId>"
+"Option<ModBanId>" <-- "ModBanId"
+"ModlogCombined" <-- "Option<ModBanId>"
+"Option<ModBanFromCommunityId>" <-- "ModBanFromCommunityId"
+"ModlogCombined" <-- "Option<ModBanFromCommunityId>"
+"Option<ModFeaturePostId>" <-- "ModFeaturePostId"
+"ModlogCombined" <-- "Option<ModFeaturePostId>"
+"Option<ModChangeCommunityVisibilityId>" <-- "ModChangeCommunityVisibilityId"
+"ModlogCombined" <-- "Option<ModChangeCommunityVisibilityId>"
+"Option<ModLockPostId>" <-- "ModLockPostId"
+"ModlogCombined" <-- "Option<ModLockPostId>"
+"Option<ModRemoveCommentId>" <-- "ModRemoveCommentId"
+"ModlogCombined" <-- "Option<ModRemoveCommentId>"
+"Option<ModRemoveCommunityId>" <-- "ModRemoveCommunityId"
+"ModlogCombined" <-- "Option<ModRemoveCommunityId>"
+"Option<ModRemovePostId>" <-- "ModRemovePostId"
+"ModlogCombined" <-- "Option<ModRemovePostId>"
+"Option<ModTransferCommunityId>" <-- "ModTransferCommunityId"
+"ModlogCombined" <-- "Option<ModTransferCommunityId>"
+
+
+"PersonContentCombined" <-- "PersonContentCombinedId"
+"Option<PostId>" <-- "PostId"
+"PersonContentCombined" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"PersonContentCombined" <-- "Option<CommentId>"
+
+
+"PersonSavedCombined" <-- "PersonSavedCombinedId"
+"PersonSavedCombined" <-- "PersonId"
+"Option<PostId>" <-- "PostId"
+"PersonSavedCombined" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"PersonSavedCombined" <-- "Option<CommentId>"
+
+
+"ReportCombined" <-- "ReportCombinedId"
+"Option<PostReportId>" <-- "PostReportId"
+"ReportCombined" <-- "Option<PostReportId>"
+"Option<CommentReportId>" <-- "CommentReportId"
+"ReportCombined" <-- "Option<CommentReportId>"
+"Option<PrivateMessageReportId>" <-- "PrivateMessageReportId"
+"ReportCombined" <-- "Option<PrivateMessageReportId>"
+"Option<CommunityReportId>" <-- "CommunityReportId"
+"ReportCombined" <-- "Option<CommunityReportId>"
+
+
+"SearchCombined" <-- "SearchCombinedId"
+"Option<PostId>" <-- "PostId"
+"SearchCombined" <-- "Option<PostId>"
+"Option<CommentId>" <-- "CommentId"
+"SearchCombined" <-- "Option<CommentId>"
+"Option<CommunityId>" <-- "CommunityId"
+"SearchCombined" <-- "Option<CommunityId>"
+"Option<PersonId>" <-- "PersonId"
+"SearchCombined" <-- "Option<PersonId>"
+
+
+"Comment" <-- "CommentId"
+"Comment" <-- "PersonId"
+"Comment" <-- "PostId"
+"Comment" <-- "DbUrl"
+"Comment" <-- "LanguageId"
+
+
+"CommentInsertForm" <-- "PersonId"
+"CommentInsertForm" <-- "PostId"
+"Option<DbUrl>" <-- "DbUrl"
+"CommentInsertForm" <-- "Option<DbUrl>"
+"Option<LanguageId>" <-- "LanguageId"
+"CommentInsertForm" <-- "Option<LanguageId>"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"CommentUpdateForm" <-- "Option<DbUrl>"
+"Option<LanguageId>" <-- "LanguageId"
+"CommentUpdateForm" <-- "Option<LanguageId>"
+
+
+"CommentActions" <-- "PersonId"
+"CommentActions" <-- "CommentId"
+
+
+"CommentLikeForm" <-- "PersonId"
+"CommentLikeForm" <-- "CommentId"
+
+
+"CommentSavedForm" <-- "PersonId"
+"CommentSavedForm" <-- "CommentId"
+
+
+"CommentReply" <-- "CommentReplyId"
+"CommentReply" <-- "PersonId"
+"CommentReply" <-- "CommentId"
+
+
+"CommentReplyInsertForm" <-- "PersonId"
+"CommentReplyInsertForm" <-- "CommentId"
+
+
+
+
+"CommentReport" <-- "CommentReportId"
+"CommentReport" <-- "PersonId"
+"CommentReport" <-- "CommentId"
+"Option<PersonId>" <-- "PersonId"
+"CommentReport" <-- "Option<PersonId>"
+
+
+"CommentReportForm" <-- "PersonId"
+"CommentReportForm" <-- "CommentId"
+
+
+"Community" <-- "CommunityId"
+"Community" <-- "DbUrl"
+"Option<SensitiveString>" <-- "SensitiveString"
+"Community" <-- "Option<SensitiveString>"
+"Option<DbUrl>" <-- "DbUrl"
+"Community" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"Community" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"Community" <-- "Option<DbUrl>"
+"Community" <-- "DbUrl"
+"Community" <-- "InstanceId"
+"Option<DbUrl>" <-- "DbUrl"
+"Community" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"Community" <-- "Option<DbUrl>"
+
+
+"CommunityInsertForm" <-- "InstanceId"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityInsertForm" <-- "Option<DbUrl>"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<DbUrl>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityUpdateForm" <-- "Option<DbUrl>"
+
+
+"CommunityActions" <-- "CommunityId"
+"CommunityActions" <-- "PersonId"
+"Option<PersonId>" <-- "PersonId"
+"CommunityActions" <-- "Option<PersonId>"
+
+
+"CommunityModeratorForm" <-- "CommunityId"
+"CommunityModeratorForm" <-- "PersonId"
+
+
+"CommunityPersonBanForm" <-- "CommunityId"
+"CommunityPersonBanForm" <-- "PersonId"
+
+
+"CommunityFollowerForm" <-- "CommunityId"
+"CommunityFollowerForm" <-- "PersonId"
+"Option<PersonId>" <-- "PersonId"
+"CommunityFollowerForm" <-- "Option<PersonId>"
+
+
+"CommunityBlockForm" <-- "CommunityId"
+"CommunityBlockForm" <-- "PersonId"
+
+
+"CommunityReport" <-- "CommunityReportId"
+"CommunityReport" <-- "PersonId"
+"CommunityReport" <-- "CommunityId"
+"Option<PersonId>" <-- "PersonId"
+"CommunityReport" <-- "Option<PersonId>"
+
+
+"CommunityReportForm" <-- "PersonId"
+"CommunityReportForm" <-- "CommunityId"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityReportForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"CommunityReportForm" <-- "Option<DbUrl>"
+
+
+"CustomEmoji" <-- "CustomEmojiId"
+"CustomEmoji" <-- "DbUrl"
+
+
+"CustomEmojiInsertForm" <-- "DbUrl"
+
+
+"CustomEmojiUpdateForm" <-- "DbUrl"
+
+
+"CustomEmojiKeyword" <-- "CustomEmojiId"
+
+
+"CustomEmojiKeywordInsertForm" <-- "CustomEmojiId"
+
+
+"EmailVerification" <-- "LocalUserId"
+
+
+"EmailVerificationForm" <-- "LocalUserId"
+
+
+"FederationAllowList" <-- "InstanceId"
+
+
+"FederationAllowListForm" <-- "InstanceId"
+
+
+"FederationBlockList" <-- "InstanceId"
+
+
+"FederationBlockListForm" <-- "InstanceId"
+
+
+"FederationQueueState" <-- "InstanceId"
+"Option<ActivityId>" <-- "ActivityId"
+"FederationQueueState" <-- "Option<ActivityId>"
+
+
+"Option<LocalUserId>" <-- "LocalUserId"
+"LocalImage" <-- "Option<LocalUserId>"
+
+
+"Option<LocalUserId>" <-- "LocalUserId"
+"LocalImageForm" <-- "Option<LocalUserId>"
+
+
+"RemoteImage" <-- "DbUrl"
+
+
+"ImageDetails" <-- "DbUrl"
+
+
+"ImageDetailsInsertForm" <-- "DbUrl"
+
+
+"Instance" <-- "InstanceId"
+
+
+
+
+"InstanceActions" <-- "PersonId"
+"InstanceActions" <-- "InstanceId"
+
+
+"InstanceBlockForm" <-- "PersonId"
+"InstanceBlockForm" <-- "InstanceId"
+
+
+"InstanceBanForm" <-- "PersonId"
+"InstanceBanForm" <-- "InstanceId"
+
+
+"LocalUserKeywordBlock" <-- "LocalUserId"
+
+
+"LocalUserKeywordBlockForm" <-- "LocalUserId"
+
+
+"Language" <-- "LanguageId"
+
+
+"LocalSite" <-- "LocalSiteId"
+"LocalSite" <-- "SiteId"
+
+
+"LocalSiteInsertForm" <-- "SiteId"
+
+
+
+
+"LocalSiteRateLimit" <-- "LocalSiteId"
+
+
+"LocalSiteRateLimitInsertForm" <-- "LocalSiteId"
+
+
+
+
+
+
+
+
+"LocalUser" <-- "LocalUserId"
+"LocalUser" <-- "PersonId"
+"Option<SensitiveString>" <-- "SensitiveString"
+"LocalUser" <-- "Option<SensitiveString>"
+"Option<SensitiveString>" <-- "SensitiveString"
+"LocalUser" <-- "Option<SensitiveString>"
+"Option<SensitiveString>" <-- "SensitiveString"
+"LocalUser" <-- "Option<SensitiveString>"
+
+
+"LocalUserInsertForm" <-- "PersonId"
+
+
+
+
+"LoginToken" <-- "SensitiveString"
+"LoginToken" <-- "LocalUserId"
+
+
+"LoginTokenCreateForm" <-- "SensitiveString"
+"LoginTokenCreateForm" <-- "LocalUserId"
+
+
+"AdminPurgePerson" <-- "AdminPurgePersonId"
+"AdminPurgePerson" <-- "PersonId"
+
+
+"AdminPurgePersonForm" <-- "PersonId"
+
+
+"AdminPurgeCommunity" <-- "AdminPurgeCommunityId"
+"AdminPurgeCommunity" <-- "PersonId"
+
+
+"AdminPurgeCommunityForm" <-- "PersonId"
+
+
+"AdminPurgePost" <-- "AdminPurgePostId"
+"AdminPurgePost" <-- "PersonId"
+"AdminPurgePost" <-- "CommunityId"
+
+
+"AdminPurgePostForm" <-- "PersonId"
+"AdminPurgePostForm" <-- "CommunityId"
+
+
+"AdminPurgeComment" <-- "AdminPurgeCommentId"
+"AdminPurgeComment" <-- "PersonId"
+"AdminPurgeComment" <-- "PostId"
+
+
+"AdminPurgeCommentForm" <-- "PersonId"
+"AdminPurgeCommentForm" <-- "PostId"
+
+
+"AdminAllowInstance" <-- "AdminAllowInstanceId"
+"AdminAllowInstance" <-- "InstanceId"
+"AdminAllowInstance" <-- "PersonId"
+
+
+"AdminAllowInstanceForm" <-- "InstanceId"
+"AdminAllowInstanceForm" <-- "PersonId"
+
+
+"AdminBlockInstance" <-- "AdminBlockInstanceId"
+"AdminBlockInstance" <-- "InstanceId"
+"AdminBlockInstance" <-- "PersonId"
+
+
+"AdminBlockInstanceForm" <-- "InstanceId"
+"AdminBlockInstanceForm" <-- "PersonId"
+
+
+"ModRemovePost" <-- "ModRemovePostId"
+"ModRemovePost" <-- "PersonId"
+"ModRemovePost" <-- "PostId"
+
+
+"ModRemovePostForm" <-- "PersonId"
+"ModRemovePostForm" <-- "PostId"
+
+
+"ModLockPost" <-- "ModLockPostId"
+"ModLockPost" <-- "PersonId"
+"ModLockPost" <-- "PostId"
+
+
+"ModLockPostForm" <-- "PersonId"
+"ModLockPostForm" <-- "PostId"
+
+
+"ModFeaturePost" <-- "ModFeaturePostId"
+"ModFeaturePost" <-- "PersonId"
+"ModFeaturePost" <-- "PostId"
+
+
+"ModFeaturePostForm" <-- "PersonId"
+"ModFeaturePostForm" <-- "PostId"
+
+
+"ModRemoveComment" <-- "ModRemoveCommentId"
+"ModRemoveComment" <-- "PersonId"
+"ModRemoveComment" <-- "CommentId"
+
+
+"ModRemoveCommentForm" <-- "PersonId"
+"ModRemoveCommentForm" <-- "CommentId"
+
+
+"ModRemoveCommunity" <-- "ModRemoveCommunityId"
+"ModRemoveCommunity" <-- "PersonId"
+"ModRemoveCommunity" <-- "CommunityId"
+
+
+"ModRemoveCommunityForm" <-- "PersonId"
+"ModRemoveCommunityForm" <-- "CommunityId"
+
+
+"ModBanFromCommunity" <-- "ModBanFromCommunityId"
+"ModBanFromCommunity" <-- "PersonId"
+"ModBanFromCommunity" <-- "PersonId"
+"ModBanFromCommunity" <-- "CommunityId"
+
+
+"ModBanFromCommunityForm" <-- "PersonId"
+"ModBanFromCommunityForm" <-- "PersonId"
+"ModBanFromCommunityForm" <-- "CommunityId"
+
+
+"ModBan" <-- "ModBanId"
+"ModBan" <-- "PersonId"
+"ModBan" <-- "PersonId"
+"ModBan" <-- "InstanceId"
+
+
+"ModChangeCommunityVisibilityForm" <-- "CommunityId"
+"ModChangeCommunityVisibilityForm" <-- "PersonId"
+
+
+"ModChangeCommunityVisibility" <-- "ModChangeCommunityVisibilityId"
+"ModChangeCommunityVisibility" <-- "CommunityId"
+"ModChangeCommunityVisibility" <-- "PersonId"
+
+
+"ModBanForm" <-- "PersonId"
+"ModBanForm" <-- "PersonId"
+"ModBanForm" <-- "InstanceId"
+
+
+"ModAddCommunity" <-- "ModAddCommunityId"
+"ModAddCommunity" <-- "PersonId"
+"ModAddCommunity" <-- "PersonId"
+"ModAddCommunity" <-- "CommunityId"
+
+
+"ModAddCommunityForm" <-- "PersonId"
+"ModAddCommunityForm" <-- "PersonId"
+"ModAddCommunityForm" <-- "CommunityId"
+
+
+"ModTransferCommunity" <-- "ModTransferCommunityId"
+"ModTransferCommunity" <-- "PersonId"
+"ModTransferCommunity" <-- "PersonId"
+"ModTransferCommunity" <-- "CommunityId"
+
+
+"ModTransferCommunityForm" <-- "PersonId"
+"ModTransferCommunityForm" <-- "PersonId"
+"ModTransferCommunityForm" <-- "CommunityId"
+
+
+"ModAdd" <-- "ModAddId"
+"ModAdd" <-- "PersonId"
+"ModAdd" <-- "PersonId"
+
+
+"ModAddForm" <-- "PersonId"
+"ModAddForm" <-- "PersonId"
+
+
+"OAuthAccount" <-- "LocalUserId"
+"OAuthAccount" <-- "OAuthProviderId"
+
+
+"OAuthAccountInsertForm" <-- "LocalUserId"
+"OAuthAccountInsertForm" <-- "OAuthProviderId"
+
+
+"OAuthProvider" <-- "OAuthProviderId"
+"OAuthProvider" <-- "DbUrl"
+"OAuthProvider" <-- "DbUrl"
+"OAuthProvider" <-- "DbUrl"
+"OAuthProvider" <-- "DbUrl"
+"OAuthProvider" <-- "SensitiveString"
+
+
+
+
+"OAuthProviderInsertForm" <-- "DbUrl"
+"OAuthProviderInsertForm" <-- "DbUrl"
+"OAuthProviderInsertForm" <-- "DbUrl"
+"OAuthProviderInsertForm" <-- "DbUrl"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"OAuthProviderUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"OAuthProviderUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"OAuthProviderUpdateForm" <-- "Option<DbUrl>"
+
+
+"PasswordResetRequest" <-- "SensitiveString"
+"PasswordResetRequest" <-- "LocalUserId"
+
+
+"PasswordResetRequestForm" <-- "LocalUserId"
+"PasswordResetRequestForm" <-- "SensitiveString"
+
+
+"Person" <-- "PersonId"
+"Option<DbUrl>" <-- "DbUrl"
+"Person" <-- "Option<DbUrl>"
+"Person" <-- "DbUrl"
+"Option<SensitiveString>" <-- "SensitiveString"
+"Person" <-- "Option<SensitiveString>"
+"Option<DbUrl>" <-- "DbUrl"
+"Person" <-- "Option<DbUrl>"
+"Person" <-- "DbUrl"
+"Person" <-- "InstanceId"
+
+
+"PersonInsertForm" <-- "InstanceId"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonInsertForm" <-- "Option<DbUrl>"
+
+
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"PersonUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonUpdateForm" <-- "Option<DbUrl>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"PersonUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<DbUrl>" <-- "DbUrl"
+"PersonUpdateForm" <-- "Option<DbUrl>"
+
+
+"PersonActions" <-- "PersonId"
+"PersonActions" <-- "PersonId"
+
+
+"PersonFollowerForm" <-- "PersonId"
+"PersonFollowerForm" <-- "PersonId"
+
+
+"PersonBlockForm" <-- "PersonId"
+"PersonBlockForm" <-- "PersonId"
+
+
+"PersonCommentMention" <-- "PersonCommentMentionId"
+"PersonCommentMention" <-- "PersonId"
+"PersonCommentMention" <-- "CommentId"
+
+
+"PersonCommentMentionInsertForm" <-- "PersonId"
+"PersonCommentMentionInsertForm" <-- "CommentId"
+
+
+
+
+"PersonPostMention" <-- "PersonPostMentionId"
+"PersonPostMention" <-- "PersonId"
+"PersonPostMention" <-- "PostId"
+
+
+"PersonPostMentionInsertForm" <-- "PersonId"
+"PersonPostMentionInsertForm" <-- "PostId"
+
+
+
+
+"Post" <-- "PostId"
+"Option<DbUrl>" <-- "DbUrl"
+"Post" <-- "Option<DbUrl>"
+"Post" <-- "PersonId"
+"Post" <-- "CommunityId"
+"Option<DbUrl>" <-- "DbUrl"
+"Post" <-- "Option<DbUrl>"
+"Post" <-- "DbUrl"
+"Option<DbUrl>" <-- "DbUrl"
+"Post" <-- "Option<DbUrl>"
+"Post" <-- "LanguageId"
+
+
+"PostInsertForm" <-- "PersonId"
+"PostInsertForm" <-- "CommunityId"
+"Option<DbUrl>" <-- "DbUrl"
+"PostInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PostInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PostInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"PostInsertForm" <-- "Option<DbUrl>"
+"Option<LanguageId>" <-- "LanguageId"
+"PostInsertForm" <-- "Option<LanguageId>"
+
+
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"PostUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"PostUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"PostUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<DbUrl>" <-- "DbUrl"
+"PostUpdateForm" <-- "Option<DbUrl>"
+"Option<LanguageId>" <-- "LanguageId"
+"PostUpdateForm" <-- "Option<LanguageId>"
+
+
+"PostActions" <-- "PostId"
+"PostActions" <-- "PersonId"
+
+
+"PostLikeForm" <-- "PostId"
+"PostLikeForm" <-- "PersonId"
+
+
+"PostSavedForm" <-- "PostId"
+"PostSavedForm" <-- "PersonId"
+
+
+"PostReadForm" <-- "PostId"
+"PostReadForm" <-- "PersonId"
+
+
+"PostReadCommentsForm" <-- "PostId"
+"PostReadCommentsForm" <-- "PersonId"
+
+
+"PostHideForm" <-- "PostId"
+"PostHideForm" <-- "PersonId"
+
+
+"PostReport" <-- "PostReportId"
+"PostReport" <-- "PersonId"
+"PostReport" <-- "PostId"
+"Option<DbUrl>" <-- "DbUrl"
+"PostReport" <-- "Option<DbUrl>"
+"Option<PersonId>" <-- "PersonId"
+"PostReport" <-- "Option<PersonId>"
+
+
+"PostReportForm" <-- "PersonId"
+"PostReportForm" <-- "PostId"
+"Option<DbUrl>" <-- "DbUrl"
+"PostReportForm" <-- "Option<DbUrl>"
+
+
+"PostTag" <-- "PostId"
+"PostTag" <-- "TagId"
+
+
+"PostTagForm" <-- "PostId"
+"PostTagForm" <-- "TagId"
+
+
+"PrivateMessage" <-- "PrivateMessageId"
+"PrivateMessage" <-- "PersonId"
+"PrivateMessage" <-- "PersonId"
+"PrivateMessage" <-- "DbUrl"
+
+
+"PrivateMessageInsertForm" <-- "PersonId"
+"PrivateMessageInsertForm" <-- "PersonId"
+"Option<DbUrl>" <-- "DbUrl"
+"PrivateMessageInsertForm" <-- "Option<DbUrl>"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"PrivateMessageUpdateForm" <-- "Option<DbUrl>"
+
+
+"PrivateMessageReport" <-- "PrivateMessageReportId"
+"PrivateMessageReport" <-- "PersonId"
+"PrivateMessageReport" <-- "PrivateMessageId"
+"Option<PersonId>" <-- "PersonId"
+"PrivateMessageReport" <-- "Option<PersonId>"
+
+
+"PrivateMessageReportForm" <-- "PersonId"
+"PrivateMessageReportForm" <-- "PrivateMessageId"
+
+
+"RegistrationApplication" <-- "RegistrationApplicationId"
+"RegistrationApplication" <-- "LocalUserId"
+"Option<PersonId>" <-- "PersonId"
+"RegistrationApplication" <-- "Option<PersonId>"
+
+
+"RegistrationApplicationInsertForm" <-- "LocalUserId"
+
+
+"Option<Option<PersonId>>" <-- "PersonId"
+"RegistrationApplicationUpdateForm" <-- "Option<Option<PersonId>>"
+
+
+"Secret" <-- "SensitiveString"
+
+
+"Site" <-- "SiteId"
+"Option<DbUrl>" <-- "DbUrl"
+"Site" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"Site" <-- "Option<DbUrl>"
+"Site" <-- "DbUrl"
+"Site" <-- "DbUrl"
+"Option<SensitiveString>" <-- "SensitiveString"
+"Site" <-- "Option<SensitiveString>"
+"Site" <-- "InstanceId"
+
+
+"SiteInsertForm" <-- "InstanceId"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteInsertForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteInsertForm" <-- "Option<DbUrl>"
+
+
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"SiteUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<Option<DbUrl>>" <-- "DbUrl"
+"SiteUpdateForm" <-- "Option<Option<DbUrl>>"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteUpdateForm" <-- "Option<DbUrl>"
+"Option<DbUrl>" <-- "DbUrl"
+"SiteUpdateForm" <-- "Option<DbUrl>"
+
+
+"Tag" <-- "TagId"
+"Tag" <-- "DbUrl"
+"Tag" <-- "CommunityId"
+
+
+"TagInsertForm" <-- "DbUrl"
+"TagInsertForm" <-- "CommunityId"
+
+
+"Option<DbUrl>" <-- "DbUrl"
+"TagUpdateForm" <-- "Option<DbUrl>"
+"Option<CommunityId>" <-- "CommunityId"
+"TagUpdateForm" <-- "Option<CommunityId>"
+
+
+
+
+"Tagline" <-- "TaglineId"
+
+
+
+
+
+
+"Vec<DynColumn>" <-- "DynColumn"
+"UpleteBuilder" <-- "Vec<DynColumn>"
+
+
+"Vec<DynColumn>" <-- "DynColumn"
+"UpleteQuery" <-- "Vec<DynColumn>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"CommentQuery" <-- "Option<CommunityId>"
+"Option<PostId>" <-- "PostId"
+"CommentQuery" <-- "Option<PostId>"
+"Option<Comment>" <-- "Comment"
+"CommentQuery" <-- "Option<Comment>"
+
+
+"CommentView" <-- "Comment"
+"CommentView" <-- "Person"
+"CommentView" <-- "Post"
+"CommentView" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentView" <-- "Option<CommunityActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"CommentView" <-- "Option<CommentActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"CommentView" <-- "Option<PersonActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentView" <-- "Option<InstanceActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentView" <-- "Option<CommunityActions>"
+"CommentView" <-- "TagsView"
+
+
+"CommentSlimView" <-- "Comment"
+"CommentSlimView" <-- "Person"
+"Option<CommentActions>" <-- "CommentActions"
+"CommentSlimView" <-- "Option<CommentActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"CommentSlimView" <-- "Option<PersonActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentSlimView" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentSlimView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentSlimView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentSlimView" <-- "Option<InstanceActions>"
+
+
+"Option<Community>" <-- "Community"
+"CommunityQuery" <-- "Option<Community>"
+
+
+"CommunityView" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommunityView" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommunityView" <-- "Option<InstanceActions>"
+"CommunityView" <-- "TagsView"
+
+
+"CommunityFollowerView" <-- "Community"
+"CommunityFollowerView" <-- "Person"
+
+
+"PendingFollow" <-- "Person"
+"PendingFollow" <-- "Community"
+
+
+"CommunityModeratorView" <-- "Community"
+"CommunityModeratorView" <-- "Person"
+
+
+"CommunityPersonBanView" <-- "Community"
+"CommunityPersonBanView" <-- "Person"
+
+
+"CustomEmojiView" <-- "CustomEmoji"
+"Vec<CustomEmojiKeyword>" <-- "CustomEmojiKeyword"
+"CustomEmojiView" <-- "Vec<CustomEmojiKeyword>"
+
+
+"Option<InboxCombined>" <-- "InboxCombined"
+"InboxCombinedQuery" <-- "Option<InboxCombined>"
+
+
+"InboxCombinedViewInternal" <-- "InboxCombined"
+"Option<CommentReply>" <-- "CommentReply"
+"InboxCombinedViewInternal" <-- "Option<CommentReply>"
+"Option<PersonCommentMention>" <-- "PersonCommentMention"
+"InboxCombinedViewInternal" <-- "Option<PersonCommentMention>"
+"Option<PersonPostMention>" <-- "PersonPostMention"
+"InboxCombinedViewInternal" <-- "Option<PersonPostMention>"
+"Option<PrivateMessage>" <-- "PrivateMessage"
+"InboxCombinedViewInternal" <-- "Option<PrivateMessage>"
+"Option<Comment>" <-- "Comment"
+"InboxCombinedViewInternal" <-- "Option<Comment>"
+"Option<Post>" <-- "Post"
+"InboxCombinedViewInternal" <-- "Option<Post>"
+"Option<Community>" <-- "Community"
+"InboxCombinedViewInternal" <-- "Option<Community>"
+"InboxCombinedViewInternal" <-- "Person"
+"InboxCombinedViewInternal" <-- "Person"
+"Option<ImageDetails>" <-- "ImageDetails"
+"InboxCombinedViewInternal" <-- "Option<ImageDetails>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"InboxCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"InboxCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"InboxCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"InboxCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"InboxCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<PostActions>" <-- "PostActions"
+"InboxCombinedViewInternal" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"InboxCombinedViewInternal" <-- "Option<PersonActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"InboxCombinedViewInternal" <-- "Option<CommentActions>"
+"InboxCombinedViewInternal" <-- "TagsView"
+
+
+"PersonCommentMentionView" <-- "PersonCommentMention"
+"PersonCommentMentionView" <-- "Person"
+"PersonCommentMentionView" <-- "Comment"
+"PersonCommentMentionView" <-- "Person"
+"PersonCommentMentionView" <-- "Post"
+"PersonCommentMentionView" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonCommentMentionView" <-- "Option<CommunityActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"PersonCommentMentionView" <-- "Option<CommentActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PersonCommentMentionView" <-- "Option<PersonActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonCommentMentionView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonCommentMentionView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonCommentMentionView" <-- "Option<InstanceActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonCommentMentionView" <-- "Option<CommunityActions>"
+
+
+"PersonPostMentionView" <-- "PersonPostMention"
+"PersonPostMentionView" <-- "Person"
+"PersonPostMentionView" <-- "Post"
+"PersonPostMentionView" <-- "Person"
+"PersonPostMentionView" <-- "Community"
+"Option<ImageDetails>" <-- "ImageDetails"
+"PersonPostMentionView" <-- "Option<ImageDetails>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonPostMentionView" <-- "Option<CommunityActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PersonPostMentionView" <-- "Option<PersonActions>"
+"Option<PostActions>" <-- "PostActions"
+"PersonPostMentionView" <-- "Option<PostActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonPostMentionView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonPostMentionView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonPostMentionView" <-- "Option<InstanceActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonPostMentionView" <-- "Option<CommunityActions>"
+"PersonPostMentionView" <-- "TagsView"
+
+
+"CommentReplyView" <-- "CommentReply"
+"CommentReplyView" <-- "Person"
+"CommentReplyView" <-- "Comment"
+"CommentReplyView" <-- "Person"
+"CommentReplyView" <-- "Post"
+"CommentReplyView" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentReplyView" <-- "Option<CommunityActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"CommentReplyView" <-- "Option<CommentActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"CommentReplyView" <-- "Option<PersonActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentReplyView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentReplyView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"CommentReplyView" <-- "Option<InstanceActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentReplyView" <-- "Option<CommunityActions>"
+"CommentReplyView" <-- "TagsView"
+
+
+"LocalImageView" <-- "LocalImage"
+"LocalImageView" <-- "Person"
+
+
+"LocalUserView" <-- "LocalUser"
+"LocalUserView" <-- "Person"
+"Option<InstanceActions>" <-- "InstanceActions"
+"LocalUserView" <-- "Option<InstanceActions>"
+
+
+"Option<CommentId>" <-- "CommentId"
+"ModlogCombinedQuery" <-- "Option<CommentId>"
+"Option<PostId>" <-- "PostId"
+"ModlogCombinedQuery" <-- "Option<PostId>"
+"Option<CommunityId>" <-- "CommunityId"
+"ModlogCombinedQuery" <-- "Option<CommunityId>"
+"Option<PersonId>" <-- "PersonId"
+"ModlogCombinedQuery" <-- "Option<PersonId>"
+"Option<PersonId>" <-- "PersonId"
+"ModlogCombinedQuery" <-- "Option<PersonId>"
+"Option<ModlogCombined>" <-- "ModlogCombined"
+"ModlogCombinedQuery" <-- "Option<ModlogCombined>"
+
+
+"ModAddCommunityView" <-- "ModAddCommunity"
+"Option<Person>" <-- "Person"
+"ModAddCommunityView" <-- "Option<Person>"
+"ModAddCommunityView" <-- "Community"
+"ModAddCommunityView" <-- "Person"
+
+
+"ModAddView" <-- "ModAdd"
+"Option<Person>" <-- "Person"
+"ModAddView" <-- "Option<Person>"
+"ModAddView" <-- "Person"
+
+
+"ModBanFromCommunityView" <-- "ModBanFromCommunity"
+"Option<Person>" <-- "Person"
+"ModBanFromCommunityView" <-- "Option<Person>"
+"ModBanFromCommunityView" <-- "Community"
+"ModBanFromCommunityView" <-- "Person"
+
+
+"ModBanView" <-- "ModBan"
+"Option<Person>" <-- "Person"
+"ModBanView" <-- "Option<Person>"
+"ModBanView" <-- "Person"
+
+
+"ModChangeCommunityVisibilityView" <-- "ModChangeCommunityVisibility"
+"Option<Person>" <-- "Person"
+"ModChangeCommunityVisibilityView" <-- "Option<Person>"
+"ModChangeCommunityVisibilityView" <-- "Community"
+
+
+"ModLockPostView" <-- "ModLockPost"
+"Option<Person>" <-- "Person"
+"ModLockPostView" <-- "Option<Person>"
+"ModLockPostView" <-- "Person"
+"ModLockPostView" <-- "Post"
+"ModLockPostView" <-- "Community"
+
+
+"ModRemoveCommentView" <-- "ModRemoveComment"
+"Option<Person>" <-- "Person"
+"ModRemoveCommentView" <-- "Option<Person>"
+"ModRemoveCommentView" <-- "Person"
+"ModRemoveCommentView" <-- "Comment"
+"ModRemoveCommentView" <-- "Post"
+"ModRemoveCommentView" <-- "Community"
+
+
+"ModRemoveCommunityView" <-- "ModRemoveCommunity"
+"Option<Person>" <-- "Person"
+"ModRemoveCommunityView" <-- "Option<Person>"
+"ModRemoveCommunityView" <-- "Community"
+
+
+"ModRemovePostView" <-- "ModRemovePost"
+"Option<Person>" <-- "Person"
+"ModRemovePostView" <-- "Option<Person>"
+"ModRemovePostView" <-- "Person"
+"ModRemovePostView" <-- "Post"
+"ModRemovePostView" <-- "Community"
+
+
+"ModFeaturePostView" <-- "ModFeaturePost"
+"Option<Person>" <-- "Person"
+"ModFeaturePostView" <-- "Option<Person>"
+"ModFeaturePostView" <-- "Person"
+"ModFeaturePostView" <-- "Post"
+"ModFeaturePostView" <-- "Community"
+
+
+"ModTransferCommunityView" <-- "ModTransferCommunity"
+"Option<Person>" <-- "Person"
+"ModTransferCommunityView" <-- "Option<Person>"
+"ModTransferCommunityView" <-- "Community"
+"ModTransferCommunityView" <-- "Person"
+
+
+"AdminPurgeCommentView" <-- "AdminPurgeComment"
+"Option<Person>" <-- "Person"
+"AdminPurgeCommentView" <-- "Option<Person>"
+"AdminPurgeCommentView" <-- "Post"
+
+
+"AdminPurgeCommunityView" <-- "AdminPurgeCommunity"
+"Option<Person>" <-- "Person"
+"AdminPurgeCommunityView" <-- "Option<Person>"
+
+
+"AdminPurgePersonView" <-- "AdminPurgePerson"
+"Option<Person>" <-- "Person"
+"AdminPurgePersonView" <-- "Option<Person>"
+
+
+"AdminPurgePostView" <-- "AdminPurgePost"
+"Option<Person>" <-- "Person"
+"AdminPurgePostView" <-- "Option<Person>"
+"AdminPurgePostView" <-- "Community"
+
+
+"AdminBlockInstanceView" <-- "AdminBlockInstance"
+"AdminBlockInstanceView" <-- "Instance"
+"Option<Person>" <-- "Person"
+"AdminBlockInstanceView" <-- "Option<Person>"
+
+
+"AdminAllowInstanceView" <-- "AdminAllowInstance"
+"AdminAllowInstanceView" <-- "Instance"
+"Option<Person>" <-- "Person"
+"AdminAllowInstanceView" <-- "Option<Person>"
+
+
+"Option<AdminAllowInstance>" <-- "AdminAllowInstance"
+"ModlogCombinedViewInternal" <-- "Option<AdminAllowInstance>"
+"Option<AdminBlockInstance>" <-- "AdminBlockInstance"
+"ModlogCombinedViewInternal" <-- "Option<AdminBlockInstance>"
+"Option<AdminPurgeComment>" <-- "AdminPurgeComment"
+"ModlogCombinedViewInternal" <-- "Option<AdminPurgeComment>"
+"Option<AdminPurgeCommunity>" <-- "AdminPurgeCommunity"
+"ModlogCombinedViewInternal" <-- "Option<AdminPurgeCommunity>"
+"Option<AdminPurgePerson>" <-- "AdminPurgePerson"
+"ModlogCombinedViewInternal" <-- "Option<AdminPurgePerson>"
+"Option<AdminPurgePost>" <-- "AdminPurgePost"
+"ModlogCombinedViewInternal" <-- "Option<AdminPurgePost>"
+"Option<ModAdd>" <-- "ModAdd"
+"ModlogCombinedViewInternal" <-- "Option<ModAdd>"
+"Option<ModAddCommunity>" <-- "ModAddCommunity"
+"ModlogCombinedViewInternal" <-- "Option<ModAddCommunity>"
+"Option<ModBan>" <-- "ModBan"
+"ModlogCombinedViewInternal" <-- "Option<ModBan>"
+"Option<ModBanFromCommunity>" <-- "ModBanFromCommunity"
+"ModlogCombinedViewInternal" <-- "Option<ModBanFromCommunity>"
+"Option<ModFeaturePost>" <-- "ModFeaturePost"
+"ModlogCombinedViewInternal" <-- "Option<ModFeaturePost>"
+"Option<ModChangeCommunityVisibility>" <-- "ModChangeCommunityVisibility"
+"ModlogCombinedViewInternal" <-- "Option<ModChangeCommunityVisibility>"
+"Option<ModLockPost>" <-- "ModLockPost"
+"ModlogCombinedViewInternal" <-- "Option<ModLockPost>"
+"Option<ModRemoveComment>" <-- "ModRemoveComment"
+"ModlogCombinedViewInternal" <-- "Option<ModRemoveComment>"
+"Option<ModRemoveCommunity>" <-- "ModRemoveCommunity"
+"ModlogCombinedViewInternal" <-- "Option<ModRemoveCommunity>"
+"Option<ModRemovePost>" <-- "ModRemovePost"
+"ModlogCombinedViewInternal" <-- "Option<ModRemovePost>"
+"Option<ModTransferCommunity>" <-- "ModTransferCommunity"
+"ModlogCombinedViewInternal" <-- "Option<ModTransferCommunity>"
+"Option<Person>" <-- "Person"
+"ModlogCombinedViewInternal" <-- "Option<Person>"
+"Option<Person>" <-- "Person"
+"ModlogCombinedViewInternal" <-- "Option<Person>"
+"Option<Instance>" <-- "Instance"
+"ModlogCombinedViewInternal" <-- "Option<Instance>"
+"Option<Community>" <-- "Community"
+"ModlogCombinedViewInternal" <-- "Option<Community>"
+"Option<Post>" <-- "Post"
+"ModlogCombinedViewInternal" <-- "Option<Post>"
+"Option<Comment>" <-- "Comment"
+"ModlogCombinedViewInternal" <-- "Option<Comment>"
+
+
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetModlogResponse" <-- "Option<PaginationCursor>"
+"Option<PaginationCursor>" <-- "PaginationCursor"
+"GetModlogResponse" <-- "Option<PaginationCursor>"
+
+
+"Option<Person>" <-- "Person"
+"PersonQuery" <-- "Option<Person>"
+
+
+"PersonView" <-- "Person"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonView" <-- "Option<InstanceActions>"
+
+
+"PersonContentCombinedQuery" <-- "PersonId"
+"Option<PersonContentCombined>" <-- "PersonContentCombined"
+"PersonContentCombinedQuery" <-- "Option<PersonContentCombined>"
+
+
+"PersonContentCombinedViewInternal" <-- "PersonContentCombined"
+"Option<Comment>" <-- "Comment"
+"PersonContentCombinedViewInternal" <-- "Option<Comment>"
+"PersonContentCombinedViewInternal" <-- "Post"
+"PersonContentCombinedViewInternal" <-- "Person"
+"PersonContentCombinedViewInternal" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonContentCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonContentCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonContentCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonContentCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonContentCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<PostActions>" <-- "PostActions"
+"PersonContentCombinedViewInternal" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PersonContentCombinedViewInternal" <-- "Option<PersonActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"PersonContentCombinedViewInternal" <-- "Option<CommentActions>"
+"Option<ImageDetails>" <-- "ImageDetails"
+"PersonContentCombinedViewInternal" <-- "Option<ImageDetails>"
+"PersonContentCombinedViewInternal" <-- "TagsView"
+
+
+"Option<PersonSavedCombined>" <-- "PersonSavedCombined"
+"PersonSavedCombinedQuery" <-- "Option<PersonSavedCombined>"
+
+
+"PersonSavedCombinedViewInternal" <-- "PersonSavedCombined"
+"Option<Comment>" <-- "Comment"
+"PersonSavedCombinedViewInternal" <-- "Option<Comment>"
+"PersonSavedCombinedViewInternal" <-- "Post"
+"PersonSavedCombinedViewInternal" <-- "Person"
+"PersonSavedCombinedViewInternal" <-- "Community"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonSavedCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PersonSavedCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonSavedCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonSavedCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PersonSavedCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<PostActions>" <-- "PostActions"
+"PersonSavedCombinedViewInternal" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PersonSavedCombinedViewInternal" <-- "Option<PersonActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"PersonSavedCombinedViewInternal" <-- "Option<CommentActions>"
+"Option<ImageDetails>" <-- "ImageDetails"
+"PersonSavedCombinedViewInternal" <-- "Option<ImageDetails>"
+"PersonSavedCombinedViewInternal" <-- "TagsView"
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"PostQuery" <-- "Option<CommunityId>"
+"Option<Post>" <-- "Post"
+"PostQuery" <-- "Option<Post>"
+"Option<Post>" <-- "Post"
+"PostQuery" <-- "Option<Post>"
+
+
+"PostView" <-- "Post"
+"PostView" <-- "Person"
+"PostView" <-- "Community"
+"Option<ImageDetails>" <-- "ImageDetails"
+"PostView" <-- "Option<ImageDetails>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PostView" <-- "Option<CommunityActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PostView" <-- "Option<PersonActions>"
+"Option<PostActions>" <-- "PostActions"
+"PostView" <-- "Option<PostActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PostView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PostView" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"PostView" <-- "Option<InstanceActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PostView" <-- "Option<CommunityActions>"
+"PostView" <-- "TagsView"
+
+
+"PrivateMessageView" <-- "PrivateMessage"
+"PrivateMessageView" <-- "Person"
+"PrivateMessageView" <-- "Person"
+
+
+"Option<RegistrationApplication>" <-- "RegistrationApplication"
+"RegistrationApplicationQuery" <-- "Option<RegistrationApplication>"
+
+
+"RegistrationApplicationView" <-- "RegistrationApplication"
+"RegistrationApplicationView" <-- "LocalUser"
+"RegistrationApplicationView" <-- "Person"
+"Option<Person>" <-- "Person"
+"RegistrationApplicationView" <-- "Option<Person>"
+
+
+"PrivateMessageReportView" <-- "PrivateMessageReport"
+"PrivateMessageReportView" <-- "PrivateMessage"
+"PrivateMessageReportView" <-- "Person"
+"PrivateMessageReportView" <-- "Person"
+"Option<Person>" <-- "Person"
+"PrivateMessageReportView" <-- "Option<Person>"
+
+
+"CommentReportView" <-- "CommentReport"
+"CommentReportView" <-- "Comment"
+"CommentReportView" <-- "Post"
+"CommentReportView" <-- "Community"
+"CommentReportView" <-- "Person"
+"CommentReportView" <-- "Person"
+"Option<CommentActions>" <-- "CommentActions"
+"CommentReportView" <-- "Option<CommentActions>"
+"Option<Person>" <-- "Person"
+"CommentReportView" <-- "Option<Person>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentReportView" <-- "Option<CommunityActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"CommentReportView" <-- "Option<PersonActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"CommentReportView" <-- "Option<CommunityActions>"
+
+
+"CommunityReportView" <-- "CommunityReport"
+"CommunityReportView" <-- "Community"
+"CommunityReportView" <-- "Person"
+"Option<Person>" <-- "Person"
+"CommunityReportView" <-- "Option<Person>"
+
+
+"PostReportView" <-- "PostReport"
+"PostReportView" <-- "Post"
+"PostReportView" <-- "Community"
+"PostReportView" <-- "Person"
+"PostReportView" <-- "Person"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PostReportView" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"PostReportView" <-- "Option<CommunityActions>"
+"Option<PostActions>" <-- "PostActions"
+"PostReportView" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"PostReportView" <-- "Option<PersonActions>"
+"Option<Person>" <-- "Person"
+"PostReportView" <-- "Option<Person>"
+
+
+"Option<PostId>" <-- "PostId"
+"ReportCombinedQuery" <-- "Option<PostId>"
+"Option<CommunityId>" <-- "CommunityId"
+"ReportCombinedQuery" <-- "Option<CommunityId>"
+"Option<ReportCombined>" <-- "ReportCombined"
+"ReportCombinedQuery" <-- "Option<ReportCombined>"
+
+
+"ReportCombinedViewInternal" <-- "ReportCombined"
+"Option<PostReport>" <-- "PostReport"
+"ReportCombinedViewInternal" <-- "Option<PostReport>"
+"Option<CommentReport>" <-- "CommentReport"
+"ReportCombinedViewInternal" <-- "Option<CommentReport>"
+"Option<PrivateMessageReport>" <-- "PrivateMessageReport"
+"ReportCombinedViewInternal" <-- "Option<PrivateMessageReport>"
+"Option<CommunityReport>" <-- "CommunityReport"
+"ReportCombinedViewInternal" <-- "Option<CommunityReport>"
+"ReportCombinedViewInternal" <-- "Person"
+"Option<Comment>" <-- "Comment"
+"ReportCombinedViewInternal" <-- "Option<Comment>"
+"Option<PrivateMessage>" <-- "PrivateMessage"
+"ReportCombinedViewInternal" <-- "Option<PrivateMessage>"
+"Option<Post>" <-- "Post"
+"ReportCombinedViewInternal" <-- "Option<Post>"
+"Option<Person>" <-- "Person"
+"ReportCombinedViewInternal" <-- "Option<Person>"
+"Option<Person>" <-- "Person"
+"ReportCombinedViewInternal" <-- "Option<Person>"
+"Option<Community>" <-- "Community"
+"ReportCombinedViewInternal" <-- "Option<Community>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"ReportCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"ReportCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<PostActions>" <-- "PostActions"
+"ReportCombinedViewInternal" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"ReportCombinedViewInternal" <-- "Option<PersonActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"ReportCombinedViewInternal" <-- "Option<CommentActions>"
+
+
+"Option<CommunityId>" <-- "CommunityId"
+"SearchCombinedQuery" <-- "Option<CommunityId>"
+"Option<PersonId>" <-- "PersonId"
+"SearchCombinedQuery" <-- "Option<PersonId>"
+"Option<SearchCombined>" <-- "SearchCombined"
+"SearchCombinedQuery" <-- "Option<SearchCombined>"
+
+
+"SearchCombinedViewInternal" <-- "SearchCombined"
+"Option<Comment>" <-- "Comment"
+"SearchCombinedViewInternal" <-- "Option<Comment>"
+"Option<Post>" <-- "Post"
+"SearchCombinedViewInternal" <-- "Option<Post>"
+"Option<Person>" <-- "Person"
+"SearchCombinedViewInternal" <-- "Option<Person>"
+"Option<Community>" <-- "Community"
+"SearchCombinedViewInternal" <-- "Option<Community>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"SearchCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<CommunityActions>" <-- "CommunityActions"
+"SearchCombinedViewInternal" <-- "Option<CommunityActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"SearchCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"SearchCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<InstanceActions>" <-- "InstanceActions"
+"SearchCombinedViewInternal" <-- "Option<InstanceActions>"
+"Option<PostActions>" <-- "PostActions"
+"SearchCombinedViewInternal" <-- "Option<PostActions>"
+"Option<PersonActions>" <-- "PersonActions"
+"SearchCombinedViewInternal" <-- "Option<PersonActions>"
+"Option<CommentActions>" <-- "CommentActions"
+"SearchCombinedViewInternal" <-- "Option<CommentActions>"
+"Option<ImageDetails>" <-- "ImageDetails"
+"SearchCombinedViewInternal" <-- "Option<ImageDetails>"
+"SearchCombinedViewInternal" <-- "TagsView"
+"SearchCombinedViewInternal" <-- "TagsView"
+
+
+"SiteView" <-- "Site"
+"SiteView" <-- "LocalSite"
+"SiteView" <-- "LocalSiteRateLimit"
+"SiteView" <-- "Instance"
+
+
+"VoteView" <-- "Person"
+
+
+
+
+"Option<Site>" <-- "Site"
+"CommunityInboxCollector" <-- "Option<Site>"
+"HashMap<CommunityId,HashSet<Url>>" <-- "CommunityId"
+"CommunityInboxCollector" <-- "HashMap<CommunityId,HashSet<Url>>"
+"CommunityInboxCollector" <-- "InstanceId"
+
+
+
+
+"SendManager" <-- "Opts"
+"HashMap<InstanceId,CancellableTask>" <-- "InstanceId"
+"SendManager" <-- "HashMap<InstanceId,CancellableTask>"
+"FederationConfig<LemmyContext>" <-- "LemmyContext"
+"SendManager" <-- "FederationConfig<LemmyContext>"
+"SendManager" <-- "FederationWorkerConfig"
+
+
+
+
+
+
+"Entry" <-- "LocalUserId"
+"Entry" <-- "InstantSecs"
+
+
+"Arc<RwLock<HashSet<Entry>>>" <-- "Entry"
+"IdempotencySet" <-- "Arc<RwLock<HashSet<Entry>>>"
+
+
+"IdempotencyMiddleware" <-- "IdempotencySet"
+
+
+"IdempotencyService" <-- "IdempotencySet"
+
+
+"SessionMiddleware" <-- "LemmyContext"
+
+
+"SessionService" <-- "LemmyContext"
+
+
+"Vec<NodeInfoWellKnownLinks>" <-- "NodeInfoWellKnownLinks"
+"NodeInfoWellKnown" <-- "Vec<NodeInfoWellKnownLinks>"
+
+
+
+
+"Option<NodeInfoSoftware>" <-- "NodeInfoSoftware"
+"NodeInfo" <-- "Option<NodeInfoSoftware>"
+"Option<NodeInfoUsage>" <-- "NodeInfoUsage"
+"NodeInfo" <-- "Option<NodeInfoUsage>"
+"Option<NodeInfoServices>" <-- "NodeInfoServices"
+"NodeInfo" <-- "Option<NodeInfoServices>"
+
+
+
+
+"Option<NodeInfoUsers>" <-- "NodeInfoUsers"
+"NodeInfoUsage" <-- "Option<NodeInfoUsers>"
+
+
+
+
+
+
+"PromContext" <-- "LemmyContext"
+"PromContext" <-- "DbPoolMetrics"
+
+
+
+
+
+
+"Arc<Mutex<RateLimitState>>" <-- "RateLimitState"
+"RateLimitChecker" <-- "Arc<Mutex<RateLimitState>>"
+
+
+"Arc<Mutex<RateLimitState>>" <-- "RateLimitState"
+"RateLimitCell" <-- "Arc<Mutex<RateLimitState>>"
+
+
+"RateLimitedMiddleware" <-- "RateLimitChecker"
+
+
+
+
+"Bucket" <-- "InstantSecs"
+
+
+
+
+"EnumMap<ActionType,Bucket>" <-- "Bucket"
+"RateLimitedGroup" <-- "EnumMap<ActionType,Bucket>"
+
+
+"EnumMap<ActionType,BucketConfig>" <-- "BucketConfig"
+"RateLimitState" <-- "EnumMap<ActionType,BucketConfig>"
+
+
+"Settings" <-- "DatabaseConfig"
+"Option<PictrsConfig>" <-- "PictrsConfig"
+"Settings" <-- "Option<PictrsConfig>"
+"Option<EmailConfig>" <-- "EmailConfig"
+"Settings" <-- "Option<EmailConfig>"
+"Option<SetupConfig>" <-- "SetupConfig"
+"Settings" <-- "Option<SetupConfig>"
+"Settings" <-- "FederationWorkerConfig"
+"Option<PrometheusConfig>" <-- "PrometheusConfig"
+"Settings" <-- "Option<PrometheusConfig>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

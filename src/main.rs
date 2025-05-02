@@ -31,7 +31,7 @@ fn main() {
 
     let source = matches
         .value_of("INPUT")
-        .unwrap_or(".");
+        .unwrap_or("C:\\Users\\Administrator\\Code\\lemmy\\crates");
     match metadata(source) {
         Err(e) => {
             println!("Unable to find source.{}{}", source, e);
