@@ -8,11 +8,12 @@
             "type": "cppvsdbg",
             "request": "launch",
             "name": "Launch ruml",
-            "cwd":"${workspaceRoot}",
+            "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}/target/debug/ruml.exe",
             "preLaunchTask": "cargo build",
             "args": [
-                "${input:INPUT}"
+                "${input:INPUT}",
+                "${input:FILENAME}"
             ],
         }
     ],
@@ -22,6 +23,12 @@
             "id": "INPUT",
             "description": "Directory of the project to run ruml on",
             "default": "${workspaceFolder}"
+        },
+        {
+            "type": "promptString",
+            "id": "FILENAME",
+            "description": "Filename of output file created by ruml (.puml)",
+            "default": "plantuml.puml"
         }
     ]
 }

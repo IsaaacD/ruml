@@ -1,4 +1,4 @@
-use std::fs::{metadata, File, OpenOptions};
+use std::fs::{metadata, File};
 use std::io::{Read, Write};
 use std::process::exit;
 
@@ -27,11 +27,20 @@ fn main() {
                 .required(false)
                 .index(1),
         )
+        .arg(
+            Arg::with_name("FILENAME")
+                .help("Sets the output file name")
+                .required(false)
+                .index(2),
+        )
         .get_matches();
 
     let source = matches
         .value_of("INPUT")
-        .unwrap_or("C:\\Users\\Administrator\\Code\\lemmy\\crates");
+        .unwrap_or(".");
+
+    let file_name = matches.value_of("FILENAME").unwrap_or("plantuml.puml");
+
     match metadata(source) {
         Err(e) => {
             println!("Unable to find source.{}{}", source, e);
@@ -63,7 +72,7 @@ fn main() {
                         }
                     }
                 }
-                let file_name = "plantuml.puml";
+
                 if File::open(file_name).is_ok() {
                     std::fs::remove_file(file_name).expect("Unable to remove file");
                 }
